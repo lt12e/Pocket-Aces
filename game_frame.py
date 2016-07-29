@@ -14,6 +14,8 @@
 import sys, os
 from PyQt5 import QtWidgets, QtGui, QtCore
 
+
+
 class StartFrame(QtWidgets.QMainWindow):
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
@@ -193,11 +195,12 @@ class Background(QtWidgets.QWidget):
         print self.numPlayers
         self.gameMode = self.gameModeCombo.currentIndex() + 1
 
-        self.gp = Gameplay
+        self.gp = Gameplay(self)
         self.preGameInfoSetVisible(False)
-        self.gameSetVisible(True)
+        if self.hbox.isEnabled():
+            self.hbox.setEnabled(False)
 
-        # self.setCentralWidget(self.gp)
+        self.setLayout(self.gp)
         
 
     def preGameInfoSetVisible(self,b):
@@ -207,14 +210,16 @@ class Background(QtWidgets.QWidget):
         self.playersCombo.setVisible(b)
         self.playersComboOk.setVisible(b)
 
-    def gameSetVisible(self,b):
-        self.gp.setVisible(b)
+    # def gameSetVisible(self,b):
+        
+    #     # gp.setEnabled(True)
+    #     gp.setVisible(b)
 
 class Gameplay(QtWidgets.QWidget):
     def __init__(self,parent):
         QtWidgets.QWidget.__init__(self, parent)
         #TODO change to fit blackjack and THE classes
-        if gameMode == 1:
+        if parent.gameMode == 1:
             self.gameObj = BlackJack()
         else: #gameMode == 2
             self.gameObj = TexasHoldEm()
