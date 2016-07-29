@@ -10,6 +10,8 @@ class Dealer:
 	#Initializes the deck from PlayingCards class
 		self.hand = []
 		self.deck = PlayingCards()
+		self.name = ""
+		self.money = 2000
 
 	def __str__(self):
 	#Defines print to print out the current HAND
@@ -70,6 +72,19 @@ class Dealer:
 		hand.remove(one)
 		hand.append(self.deck.getCard())
 		return hand
+
+	def setName(self,n):
+		#Sets the Dealer's name
+		self.name = n
+
+	def getName(self):
+		return self.name
+
+	def setMoney(self, m):
+		self.money = m
+
+	def getMoney(self):
+		return self.money
 
 class Player(Dealer):
 	'Poker Player sub-class'
