@@ -9,9 +9,11 @@ class Dealer:
 	#Initializes a list for dealer's hand
 	#Initializes the deck from PlayingCards class
 		self.hand = []
+		self.hand2 = [] #for Blackjack if hand is split
 		self.deck = PlayingCards()
 		self.name = ""
 		self.money = 2000
+		self.betAmt = 0
 
 	def __str__(self):
 	#Defines print to print out the current HAND
@@ -37,6 +39,11 @@ class Dealer:
 				self.giveCard(self.deck.getCard())
 		elif game == "five":
 			for card in range(5):
+				for player in players:
+					player.giveCard(self.deck.getCard())
+				self.giveCard(self.deck.getCard())
+		elif game == "blackjack":
+			for card in range(2):
 				for player in players:
 					player.giveCard(self.deck.getCard())
 				self.giveCard(self.deck.getCard())

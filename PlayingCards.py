@@ -49,6 +49,7 @@ class PlayingCards:
 	def getCard(self):
 	#Pops a card from the deck and returns the card
 		return self.deck.pop()
+
    
 if __name__ == '__main__':
 	print "Starting deck of cards"
