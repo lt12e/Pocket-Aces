@@ -10,8 +10,11 @@
 ## medpot.jpg from
 ## lgpot.jpg from
 
+##back2.jpg from http://www.leeasher.com/store/playing_cards/tally_ho_red.html
+## back.png from http://becuo.com/cool-playing-cards-back
 
-import sys, os
+
+import sys#, os
 from PyQt5 import QtWidgets, QtGui, QtCore
 import BlackJack
 
@@ -63,19 +66,6 @@ class MainWindow(QtWidgets.QMainWindow):
     #     else:
     #         event.ignore()
 
-
-# ## Base Layout (level 1) ##
-# class MainLayout(QtWidgets.QWidget):
-#     def __init__(self,parent):
-#         QtWidgets.QWidget.__init__(self,parent)
-#         self.setup()
-
-#     def setup(self):
-#         self.background = Background(self)
-#         self.mainLayout = QtWidgets.QVBoxLayout()
-#         self.setLayout(self.mainLayout)
-#         self.mainLayout.addWidget(self.background)
-
 ## App Background Layout (level 1) ##
 class Background(QtWidgets.QWidget):
     def __init__(self,parent):
@@ -91,7 +81,37 @@ class Background(QtWidgets.QWidget):
         self.hbox = QtWidgets.QHBoxLayout()
         self.bbox = QtWidgets.QHBoxLayout()
 
-        ## Inital screen elements ##
+        self.setInitLayout()
+
+        self.setLayout(self.hbox)
+
+    def paintEvent(self,event):
+        ## Table Setup ##
+        qp = QtGui.QPainter()
+        qp.begin(self)
+        pen = qp.pen()
+        pen.setColor(QtGui.QColor(QtCore.Qt.transparent))
+        qp.setPen(pen)
+        edgeBrush = QtGui.QBrush()
+        tableBrush = QtGui.QBrush() #reset brush
+
+        if self.tStyle == 1:
+            edgeBrush.setTextureImage(QtGui.QImage('redseamless.jpg'))
+            tableBrush.setTextureImage(QtGui.QImage('jungle-green-grunge-texture.jpg'))
+        else: #self.tStyle == 2
+            edgeBrush.setTextureImage(QtGui.QImage('wood.jpg'))
+            tableBrush.setTextureImage(QtGui.QImage('green-gradient.jpg'))
+
+        qp.setBrush(edgeBrush)
+        qp.drawEllipse(-150,-650,1300,1300)
+        qp.setPen(pen)
+        qp.setBrush(tableBrush)
+        qp.drawEllipse(-120,-620,1240,1240)
+
+        qp.end()
+
+    def setInitLayout(self):
+                ## Inital screen elements ##
         self.logo = QtWidgets.QLabel()
         self.logoPixmap = QtGui.QPixmap("logo.jpg")
         self.logo.setPixmap(self.logoPixmap)
@@ -102,6 +122,7 @@ class Background(QtWidgets.QWidget):
         self.loadButton = QtWidgets.QPushButton('Load Game')
         self.loadButton.setToolTip('Load a previous game')
         self.loadButton.clicked.connect(self.loadGame)
+        self.loadButton.setFixedWidth(80)
         self.loadButton.setVisible(False)
 
         ## Game choice screen elements ##
@@ -146,33 +167,6 @@ class Background(QtWidgets.QWidget):
         self.vbox.addLayout(self.comboBoxLayout)        
         self.vbox.addStretch(.5)
 
-        self.setLayout(self.hbox)
-
-    def paintEvent(self,event):
-        ## Table Setup ##
-        qp = QtGui.QPainter()
-        qp.begin(self)
-        pen = qp.pen()
-        pen.setColor(QtGui.QColor(QtCore.Qt.transparent))
-        qp.setPen(pen)
-        edgeBrush = QtGui.QBrush()
-        tableBrush = QtGui.QBrush() #reset brush
-
-        if self.tStyle == 1:
-            edgeBrush.setTextureImage(QtGui.QImage('redseamless.jpg'))
-            tableBrush.setTextureImage(QtGui.QImage('jungle-green-grunge-texture.jpg'))
-        else: #self.tStyle == 2
-            edgeBrush.setTextureImage(QtGui.QImage('wood.jpg'))
-            tableBrush.setTextureImage(QtGui.QImage('green-gradient.jpg'))
-
-        qp.setBrush(edgeBrush)
-        qp.drawEllipse(-150,-650,1300,1300)
-        qp.setPen(pen)
-        qp.setBrush(tableBrush)
-        qp.drawEllipse(-120,-620,1240,1240)
-
-        qp.end()
-
     def changeTableStyle(self, tableStyle):
         if tableStyle == 1:
             return 2
@@ -200,7 +194,6 @@ class Background(QtWidgets.QWidget):
 
     def getNumPlayers(self):
         self.numPlayers = self.playersCombo.currentIndex() + 1
-        print self.numPlayers
         self.gameMode = self.gameModeCombo.currentIndex() + 1
 
         self.gp = GameplayWidget(self)
@@ -229,10 +222,8 @@ class Background(QtWidgets.QWidget):
             self.gameObj = TexasHoldEm()
             gameObj.setNumPlayers(self.numPlayers+2) 
 
-    # def gameSetVisible(self,b):
-        
-    #     # gp.setEnabled(True)
-    #     gp.setVisible(b)
+    def showGameplayWidget(self):
+        pass
 
 class GameplayWidget(QtWidgets.QWidget):
     def __init__(self,parent):
@@ -261,15 +252,16 @@ class GameplayWidget(QtWidgets.QWidget):
     def setGameplayWidget(self):
         self.gameplayWidget = QtWidgets.QGridLayout()
         self.middleGameplayWidget = QtWidgets.QVBoxLayout()
-        self.potLayout = BetPotWidget
+        self.potLayout = BetPotWidget(self)
         self.potLayout.update
+        super(BetPotWidget,self.potLayout).__init__()
 
-        self.middleGameplayWidget.addLayout(self.potLayout)
-        
+        self.middleGameplayWidget.addWidget(self.potLayout)
+
         #winningHandRankings text from http://www.thepokerpractice.com/how_to_play/
         if self.gameMode == 2:
             self.communityCardsWidget = CommunityCardsWidget
-            #TODO add getCommunityCards() to game classes
+            #TODO add getCommunityCards() to THE class
             self.communityCardsWidget.setCommCardsPlayer(self.gameObj.getCommunityCards())
             self.winningHandRankings =  "Straight Flush - Five cards of the same suit in consecutive order\nFour of a Kind - Four cards of the same value\nFull House - A combination of three of a kind and a pair\nFlush - Any five cards of the same suit\nStraight - Five cards in consecutive order, suit irrelevant\nThree of a Kind - Three cards of the same value\nTwo Pair - Two sets of two cards of the same value\nOne Pair - Two cards of the same value\nHigh Card - The one card with the highest value"
             self.winningHandRankingsLabel = QtWidgets.QLabel(self.winningHandRankings)
@@ -277,7 +269,6 @@ class GameplayWidget(QtWidgets.QWidget):
             self.middleGameplayWidget.addWidget(self.winningHandRankings)
 
 
-        
 
         self.gameplayWidget.addWidget(self.humanPlayerWidget,humanPlayerSlot[0],humanPlayerSlot[1]) #insert human player into layout
         self.gameplayWidget.addWidget(self.dealerPlayerWidget,dealerSlot[0],dealerSlot[1])#insert dealer into layout
@@ -406,33 +397,51 @@ class PotWidget(QtWidgets.QWidget):
 
 class BetPotWidget(QtWidgets.QWidget):
     def __init__(self,parent):
-        bpWidget = QtWidgets.QHBoxlayout()
-        bWidget = CurrentBetWidget()
-        pWidget = PotWidget()
-        bpLayout.addWidget(bWidget)
-        bpLayout.addWidget(pWidget)
+        self.bpWidget = QtWidgets.QHBoxLayout()
+        self.bWidget = CurrentBetWidget(self)
+        self.pWidget = PotWidget(self)
+        # self.bWidget.parent.__init__()
+        super(CurrentBetWidget,self.bWidget).__init__()
+        super(PotWidget,self.pWidget).__init__()
+
+        self.bpWidget.addWidget(self.bWidget)
+        self.bpWidget.addWidget(self.pWidget)
 
     def update(self):
-        bWidget.update()
-        pWidget.update()
+        self.bWidget.update()
+        self.pWidget.update()
+
+class HandWidget(QtWidgets.QWidget):
+    def __init__(self,parent,player):
+        pass
 
 class CardWidget(QtWidgets.QWidget):
     def __init__(self,parent):  
         self.cardSuit = ""
         self.cardNumber = ""
-        self.cardLabel = QtWidgets.QLabel()
-        self.cardLabel.setPixmap("cardBack.jpg")
+        self.cardBack = QPixmap("CardImgs/back2.jpg")
+        self.cardLabel = QtWidgets.QLabel(cardBack)
+        self.cardLabel.setPixmap()
 
     def setCard(c): #c = a card tuple
-    #TODO get card suit and number from the card tuple
-        # self.cardSuit = c. #2nd value in card tuple
-        # self.cardNumber = c. #1st value in card tuple
-        pass
+        self.cardSuit = c[1] #2nd value in card tuple
+        self.cardNumber = c[0] #1st value in card tuple
 
     def showFront(self,b):
         if b == True:   #show front of card
             #TODO get cardNumIndex from gameObj?
-            cardNumIndex = -1
+            self.cardNumIndex = -1
+            if self.cardNumber == "Ace":
+                self.cardNumIndex == 12
+            elif self.cardNumber == "King":
+                self.cardNumIndex == 11
+            elif self.cardNumber == "Queen":
+                self.cardNumIndex == 10
+            elif self.cardNumber == "Jack":
+                self.cardNumIndex == 9
+            else:
+                self.cardNumIndex == int(self.cardNumber)
+
             if self.cardSuit == "Spades":
                 self.cardLabel.setPixmap(self.spadesImgs[cardNumIndex])
             elif self.cardSuit == "Hearts":
