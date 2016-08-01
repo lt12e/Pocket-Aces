@@ -13,10 +13,11 @@
 
 import sys, os
 from PyQt5 import QtWidgets, QtGui, QtCore
+import BlackJack
 
 
 
-class StartFrame(QtWidgets.QMainWindow):
+class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
         self.createStartFrame()
@@ -24,19 +25,19 @@ class StartFrame(QtWidgets.QMainWindow):
     ## Load Screen ##
     def createStartFrame(self):
         self.setWindowTitle('Pocket-Aces')
-        self.startLayout = StartLayout(self)
-        self.setCentralWidget(self.startLayout)
+        self.mainLayout = Background(self)
+        self.setCentralWidget(self.mainLayout)
         self.setStyleSheet("QMainWindow { background: 'black'}");
 
         ## Menu Options ##
         menuBar = self.menuBar().addMenu('File')
         self.newGameOption = menuBar.addAction('New Game')
-        self.newGameOption.triggered.connect(self.startLayout.background.newGame)
+        self.newGameOption.triggered.connect(self.mainLayout.newGame)
         self.loadGameOption = menuBar.addAction('Load Game')
-        self.loadGameOption.triggered.connect(self.startLayout.background.loadGame)
+        self.loadGameOption.triggered.connect(self.mainLayout.loadGame)
         self.loadGameOption.setVisible(False)
         self.saveGameOption = menuBar.addAction('Save Game')
-        self.saveGameOption.triggered.connect(self.startLayout.background.saveGame)
+        self.saveGameOption.triggered.connect(self.mainLayout.saveGame)
         self.saveGameOption.setVisible(False)
         self.changeTableOption = menuBar.addAction('Change Table Style')
         self.changeTableOption.triggered.connect(self.changeTableStyle)
@@ -46,12 +47,12 @@ class StartFrame(QtWidgets.QMainWindow):
         self.show()
 
     def changeTableStyle(self):
-        if self.startLayout.background.tStyle == 1:
-            self.startLayout.background.tStyle = self.startLayout.background.changeTableStyle(1)
-            self.startLayout.background.repaint()
+        if self.mainLayout.tStyle == 1:
+            self.mainLayout.tStyle = self.mainLayout.changeTableStyle(1)
+            self.mainLayout.repaint()
         else:
-            self.startLayout.background.tStyle = self.startLayout.background.changeTableStyle(2)
-            self.startLayout.background.repaint()
+            self.mainLayout.tStyle = self.mainLayout.changeTableStyle(2)
+            self.mainLayout.repaint()
 
     ## closeEvent from peg_game.py example code ##
     # def closeEvent(self,event):
@@ -63,19 +64,19 @@ class StartFrame(QtWidgets.QMainWindow):
     #         event.ignore()
 
 
-## Base Layout (level 1) ##
-class StartLayout(QtWidgets.QWidget):
-    def __init__(self,parent):
-        QtWidgets.QWidget.__init__(self,parent)
-        self.setup()
+# ## Base Layout (level 1) ##
+# class MainLayout(QtWidgets.QWidget):
+#     def __init__(self,parent):
+#         QtWidgets.QWidget.__init__(self,parent)
+#         self.setup()
 
-    def setup(self):
-        self.background = Background(self)
-        self.startLayout = QtWidgets.QVBoxLayout()
-        self.setLayout(self.startLayout)
-        self.startLayout.addWidget(self.background)
+#     def setup(self):
+#         self.background = Background(self)
+#         self.mainLayout = QtWidgets.QVBoxLayout()
+#         self.setLayout(self.mainLayout)
+#         self.mainLayout.addWidget(self.background)
 
-## App Start Layout (level 2) ##
+## App Background Layout (level 1) ##
 class Background(QtWidgets.QWidget):
     def __init__(self,parent):
         QtWidgets.QWidget.__init__(self, parent)
@@ -88,11 +89,16 @@ class Background(QtWidgets.QWidget):
         self.setAutoFillBackground(True)
         self.vbox = QtWidgets.QVBoxLayout()
         self.hbox = QtWidgets.QHBoxLayout()
+        self.bbox = QtWidgets.QHBoxLayout()
 
         ## Inital screen elements ##
+        self.logo = QtWidgets.QLabel()
+        self.logoPixmap = QtGui.QPixmap("logo.jpg")
+        self.logo.setPixmap(self.logoPixmap)
         self.newButton = QtWidgets.QPushButton('New Game')
         self.newButton.setToolTip('Begin a new game')
         self.newButton.clicked.connect(self.newGame)
+        self.newButton.setFixedWidth(80)
         self.loadButton = QtWidgets.QPushButton('Load Game')
         self.loadButton.setToolTip('Load a previous game')
         self.loadButton.clicked.connect(self.loadGame)
@@ -103,7 +109,8 @@ class Background(QtWidgets.QWidget):
         #TODO change color to white and font to bold (and/or larger)
         self.gameModeLabel.setVisible(False)
         self.gameModeCombo = QtWidgets.QComboBox()
-        self.gameModeCombo.addItems(['BlackJack','Texas Hold \'Em'])
+        self.gameModeCombo.addItems(['BlackJack'])
+        # self.gameModeCombo.addItems(['BlackJack','Texas Hold \'Em'])
         self.gameModeCombo.setVisible(False)
         self.playersLabel = QtWidgets.QLabel('How many players (excluding you and the dealer)?')
         #TODO change color to white and font to bold (and/or larger)
@@ -124,8 +131,15 @@ class Background(QtWidgets.QWidget):
         self.hbox.addStretch(.5)
 
         self.vbox.addStretch(.5)
-        self.vbox.addWidget(self.newButton)
-        self.vbox.addWidget(self.loadButton)
+        self.vbox.addWidget(self.logo)
+        self.vbox.addSpacing
+
+        self.bbox.addStretch(.5)
+        self.bbox.addWidget(self.newButton)
+        self.bbox.addWidget(self.loadButton)
+        self.bbox.addStretch(.5)
+        self.vbox.addSpacing(2)
+        self.vbox.addLayout(self.bbox)
         self.vbox.addWidget(self.gameModeLabel)
         self.vbox.addWidget(self.gameModeCombo)
         self.vbox.addWidget(self.playersLabel)
@@ -157,11 +171,6 @@ class Background(QtWidgets.QWidget):
         qp.setBrush(tableBrush)
         qp.drawEllipse(-120,-620,1240,1240)
 
-        ## Pocket Aces Logo ##
-        #TODO change to QLabel and add to a layout
-        image = QtGui.QImage('logo.jpg')
-        qp.drawImage(200,100,image)
-
         qp.end()
 
     def changeTableStyle(self, tableStyle):
@@ -171,13 +180,12 @@ class Background(QtWidgets.QWidget):
             return 1
 
     def newGame(self):
-        print("New Game triggered") #Both the newGameOption and newButton lead here
         if self.newButton.isVisible():
             self.newButton.setVisible(False)
         else: #currently in a game, reachable by the new game menu option
             pass
             #check with player to save game
-            #hide gameplay layout
+            #hide gameplayWidget layout
             #AND/OR set self.hbox as the current layout (central widget?)
         self.preGameInfoSetVisible(True)
 
@@ -195,11 +203,12 @@ class Background(QtWidgets.QWidget):
         print self.numPlayers
         self.gameMode = self.gameModeCombo.currentIndex() + 1
 
-        self.gp = Gameplay(self)
+        self.gp = GameplayWidget(self)
         self.preGameInfoSetVisible(False)
         if self.hbox.isEnabled():
             self.hbox.setEnabled(False)
 
+        self.initGame()
         self.setLayout(self.gp)
         
 
@@ -210,24 +219,28 @@ class Background(QtWidgets.QWidget):
         self.playersCombo.setVisible(b)
         self.playersComboOk.setVisible(b)
 
+    def initGame(self):
+        # self.parent.parent.saveGameOption.setVisible(True) #activate save game option in file menu
+        self.gameObj = None
+        #TODO change to fit blackjack and THE classes
+        if parent.gameMode == 1:
+            self.gameObj = BlackJack(self.numPlayers+2)  
+        else: #gameMode == 2
+            self.gameObj = TexasHoldEm()
+            gameObj.setNumPlayers(self.numPlayers+2) 
+
     # def gameSetVisible(self,b):
         
     #     # gp.setEnabled(True)
     #     gp.setVisible(b)
 
-class Gameplay(QtWidgets.QWidget):
+class GameplayWidget(QtWidgets.QWidget):
     def __init__(self,parent):
         QtWidgets.QWidget.__init__(self, parent)
-        #TODO change to fit blackjack and THE classes
-        if parent.gameMode == 1:
-            self.gameObj = BlackJack()
-        else: #gameMode == 2
-            self.gameObj = TexasHoldEm()
-        self.setGameplayLayout()
-        self.genericPlayerSlots = [[1,3],[2,3],[1,2],[1.1]]
+        self.setGameplayWidget()
+        self.genericPlayerSlots = [[1,3],[2,3],[1,2],[1,1]]
         self.dealerSlot = [1,2]
         self.humanPlayerSlot = [2,3]
-        # self.parent.parent.saveGameOption.setVisible(True) #activate save game option in file menu
 
 
         #TODO add getHumanPlayer, getDealer, and getGenericPlayers to game classes
@@ -245,33 +258,36 @@ class Gameplay(QtWidgets.QWidget):
             self.playerWidgetList.append(self.genericPlayerWidget)
 
 
-    def setGameplayLayout(self):
-        self.gameplayLayout = QtWidgets.QGridLayout()
-        self.middleGameplayLayout = QtWidgets.QVBoxLayout()
-        self.communityCardsWidget = self.CommunityCardsWidget()
-        #TODO add getCommunityCards() to game classes
-        self.communityCardsWidget.setPlayerObj(self.gameObj.getCommunityCards())
-        self.potLayout = BetPotLayout()
-        self.potLayout.update()
+    def setGameplayWidget(self):
+        self.gameplayWidget = QtWidgets.QGridLayout()
+        self.middleGameplayWidget = QtWidgets.QVBoxLayout()
+        self.potLayout = BetPotWidget
+        self.potLayout.update
 
-        #TODO add items to middleGameplayLayout - communityCardsWidget,BetPlotWidget, and if gameMode == 2, winningHandRankingsLabel
-        self.middleGameplayLayout.addLayout(self.communityCardsWidget)
-        self.middleGameplayLayout.addLayout(self.potLayout)
+        self.middleGameplayWidget.addLayout(self.potLayout)
+        
         #winningHandRankings text from http://www.thepokerpractice.com/how_to_play/
         if self.gameMode == 2:
+            self.communityCardsWidget = CommunityCardsWidget
+            #TODO add getCommunityCards() to game classes
+            self.communityCardsWidget.setCommCardsPlayer(self.gameObj.getCommunityCards())
             self.winningHandRankings =  "Straight Flush - Five cards of the same suit in consecutive order\nFour of a Kind - Four cards of the same value\nFull House - A combination of three of a kind and a pair\nFlush - Any five cards of the same suit\nStraight - Five cards in consecutive order, suit irrelevant\nThree of a Kind - Three cards of the same value\nTwo Pair - Two sets of two cards of the same value\nOne Pair - Two cards of the same value\nHigh Card - The one card with the highest value"
             self.winningHandRankingsLabel = QtWidgets.QLabel(self.winningHandRankings)
-            self.middleGameplayLayout.addWidget(self.winningHandRankings)
+            self.middleGameplayWidget.addLayout(self.communityCardsWidget)
+            self.middleGameplayWidget.addWidget(self.winningHandRankings)
 
-        self.gameplayLayout.addWidget(self.humanPlayerWidget,humanPlayerSlot[0],humanPlayerSlot[1]) #insert human player into layout
-        self.gameplayLayout.addWidget(self.dealerPlayerWidget,dealerSlot[0],dealerSlot[1])#insert dealer into layout
+
+        
+
+        self.gameplayWidget.addWidget(self.humanPlayerWidget,humanPlayerSlot[0],humanPlayerSlot[1]) #insert human player into layout
+        self.gameplayWidget.addWidget(self.dealerPlayerWidget,dealerSlot[0],dealerSlot[1])#insert dealer into layout
         #insert generic players into layout
         for i in range(len(self.genericPlayerList)):
-            self.gameplayLayout.addWidget(self.playerWidgetList[i+2],self.genericPlayerSlots[i][0],self.genericPlayerSlots[i][1])
-        self.gameplayLayout.addLayout(middleGameplayLayout,2,2) #insert middleGameplayLayout
+            self.gameplayWidget.addWidget(self.playerWidgetList[i+2],self.genericPlayerSlots[i][0],self.genericPlayerSlots[i][1])
+        self.gameplayWidget.addLayout(middleGameplayWidget,2,2) #insert middleGameplayWidget
 
-        #remove all layouts from background OR just set gameplayLayout as current widget
-        self.setCentralWidget(self.gameplayLayout)
+        #remove all layouts from background OR just set gameplayWidget as current widget
+        self.setCentralWidget(self.gameplayWidget)
 
 
 class PlayerWidget(QtWidgets.QWidget):
@@ -326,12 +342,23 @@ class PlayerWidget(QtWidgets.QWidget):
     def setMoneyLeftLabel(self):
         self.moneyLeftLabel.setText(self.playerObj.getMoney())
 
+
+class CenterWidget(QtWidgets.QWidget):
+    def __init__(self,parent):
+        self.topWidget = CommunityCardsWidget()
+        self.bottomWidget = BetPotWidget()
+        self.topWidget.setCommCardsPlayer()
+        self.topWidget.updateHand()
+        self.centerWidget = QtWidgets.QVBoxLayout()
+        self.addWidget(self.topWidget)
+        self.addWidget(self.bottomWidget)
+
 class CommunityCardsWidget(QtWidgets.QWidget):
     def __init__(self,parent):
         self.playerObj = None
         self.handCardWidgets = [] #list of cards
 
-    def setPlayerObj(self,player):
+    def setCommCardsPlayer(self,player):
         self.playerObj = player
         self.updateHand()        
 
@@ -343,8 +370,8 @@ class CommunityCardsWidget(QtWidgets.QWidget):
             i += 1
 
     #TODO edit this to take a tuple
-    def setCard(self,cnum):
-        self.card.setCard(cnum)    
+    def setCard(self,cardTuple):
+        self.card.setCard(cardTuple)    
 
 class CurrentBetWidget(QtWidgets.QWidget):
     def __init__(self,parent):
@@ -354,20 +381,20 @@ class CurrentBetWidget(QtWidgets.QWidget):
 
     def update(self,event):
         #TODO implement getCurrentBet in game classes
-        self.currentBet = self.gameObj.getCurrentBet #get current bet from gameplay class
+        self.currentBet = self.gameObj.getCurrentBet #get current bet from gameplayWidget class
         self.currentBetWidget.setText('$' + str(self.currentBet))#set current bet amount
         self.repaint
 
 class PotWidget(QtWidgets.QWidget):
     def __init__(self,parent):
         self.currentPotStyle = -1
-        self.currentPotWidget = QtWidgets.QLabel()    #or QtGui.QLabel()?
+        self.currentPot = QtWidgets.QLabel()    #or QtGui.QLabel()?
         self.update
 
     def update(self,event):
         #TODO determine pot amount benchmarks and add to code block
         #TODO get pot images
-        #TODO add getPot to gameplay class
+        #TODO add getPot to gameplayWidget class
         self.currentPot = self.gameObj.getPot()
         if self.currentPot <= 500:
             self.currentPotWidget.setPixmap(QPixmap("smpot.jpg"))#set current bet amount
@@ -377,9 +404,9 @@ class PotWidget(QtWidgets.QWidget):
             self.currentPotWidget.setPixmap(QPixmap("lgpot.jpg"))                        
         self.repaint
 
-class BetPotLayout(QtWidgets.QWidget):
+class BetPotWidget(QtWidgets.QWidget):
     def __init__(self,parent):
-        bpLayout = QtWidgets.QHBoxlayout()
+        bpWidget = QtWidgets.QHBoxlayout()
         bWidget = CurrentBetWidget()
         pWidget = PotWidget()
         bpLayout.addWidget(bWidget)
@@ -428,5 +455,5 @@ class CardWidget(QtWidgets.QWidget):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    mainFrame = StartFrame()
+    mainFrame = MainWindow()
     app.exec_()
