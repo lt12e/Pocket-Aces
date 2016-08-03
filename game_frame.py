@@ -16,7 +16,7 @@
 
 import sys#, os
 from PyQt5 import QtWidgets, QtGui, QtCore
-import BlackJack
+from blackjack import BlackJack
 
 
 
@@ -127,14 +127,14 @@ class Background(QtWidgets.QWidget):
 
         ## Game choice screen elements ##
         self.gameModeLabel = QtWidgets.QLabel('Which game will you play?')
-        #TODO change color to white and font to bold (and/or larger)
+        self.gameModeLabel.setStyleSheet("font: bold; color: white; font-size:24px; background-position: center")
         self.gameModeLabel.setVisible(False)
         self.gameModeCombo = QtWidgets.QComboBox()
         self.gameModeCombo.addItems(['BlackJack'])
         # self.gameModeCombo.addItems(['BlackJack','Texas Hold \'Em'])
         self.gameModeCombo.setVisible(False)
         self.playersLabel = QtWidgets.QLabel('How many players (excluding you and the dealer)?')
-        #TODO change color to white and font to bold (and/or larger)
+        self.playersLabel.setStyleSheet("font: bold; color: white; font-size:24px; background-position: center")
         self.playersLabel.setVisible(False)
         self.playersCombo = QtWidgets.QComboBox()
         self.playersCombo.addItems(['1','2','3','4'])
@@ -151,21 +151,20 @@ class Background(QtWidgets.QWidget):
         self.hbox.addLayout(self.vbox)
         self.hbox.addStretch(.5)
 
-        self.vbox.addStretch(.5)
+        self.vbox.addStretch(.4)
         self.vbox.addWidget(self.logo)
-        self.vbox.addSpacing
 
         self.bbox.addStretch(.5)
         self.bbox.addWidget(self.newButton)
         self.bbox.addWidget(self.loadButton)
         self.bbox.addStretch(.5)
-        self.vbox.addSpacing(2)
+        self.vbox.addStretch(.1)
         self.vbox.addLayout(self.bbox)
         self.vbox.addWidget(self.gameModeLabel)
         self.vbox.addWidget(self.gameModeCombo)
         self.vbox.addWidget(self.playersLabel)
         self.vbox.addLayout(self.comboBoxLayout)        
-        self.vbox.addStretch(.5)
+        self.vbox.addStretch(.4)
 
     def changeTableStyle(self, tableStyle):
         if tableStyle == 1:
@@ -196,13 +195,13 @@ class Background(QtWidgets.QWidget):
         self.numPlayers = self.playersCombo.currentIndex() + 1
         self.gameMode = self.gameModeCombo.currentIndex() + 1
 
-        self.gp = GameplayWidget(self)
+        # self.gp = GameplayWidget(self, self.gameMode, self.gameObj)
         self.preGameInfoSetVisible(False)
         if self.hbox.isEnabled():
             self.hbox.setEnabled(False)
 
         self.initGame()
-        self.setLayout(self.gp)
+        # self.setLayout(self.gp)
         
 
     def preGameInfoSetVisible(self,b):
@@ -216,19 +215,22 @@ class Background(QtWidgets.QWidget):
         # self.parent.parent.saveGameOption.setVisible(True) #activate save game option in file menu
         self.gameObj = None
         #TODO change to fit blackjack and THE classes
-        if parent.gameMode == 1:
+        if self.gameMode == 1:
             self.gameObj = BlackJack(self.numPlayers+2)  
+            self.initGameplayWidget
         else: #gameMode == 2
             self.gameObj = TexasHoldEm()
             gameObj.setNumPlayers(self.numPlayers+2) 
+            self.initGameplayWidget
+
+
+    def initGameplayWidget(self):
+        self.setGameplayWidget
+        self.showGameplayWidget
+        self.mainLayout.removeLayout(self.vbox)
 
     def showGameplayWidget(self):
-        pass
-
-class GameplayWidget(QtWidgets.QWidget):
-    def __init__(self,parent):
-        QtWidgets.QWidget.__init__(self, parent)
-        self.setGameplayWidget()
+        # self.setGameplayWidget()
         self.genericPlayerSlots = [[1,3],[2,3],[1,2],[1,1]]
         self.dealerSlot = [1,2]
         self.humanPlayerSlot = [2,3]
@@ -259,7 +261,7 @@ class GameplayWidget(QtWidgets.QWidget):
         self.middleGameplayWidget.addWidget(self.potLayout)
 
         #winningHandRankings text from http://www.thepokerpractice.com/how_to_play/
-        if self.gameMode == 2:
+        if self.gameMode == 2:  #TODO also pass gameMode and gameObj??
             self.communityCardsWidget = CommunityCardsWidget
             #TODO add getCommunityCards() to THE class
             self.communityCardsWidget.setCommCardsPlayer(self.gameObj.getCommunityCards())
@@ -278,7 +280,63 @@ class GameplayWidget(QtWidgets.QWidget):
         self.gameplayWidget.addLayout(middleGameplayWidget,2,2) #insert middleGameplayWidget
 
         #remove all layouts from background OR just set gameplayWidget as current widget
-        self.setCentralWidget(self.gameplayWidget)
+        # self.setCentralWidget(self.gameplayWidget)
+        self.setLayout(self.gameplayWidget)
+
+# class GameplayWidget(QtWidgets.QWidget):
+#     def __init__(self,parent,gameMode, gameObj):
+#         QtWidgets.QWidget.__init__(self, parent)
+#         self.setGameplayWidget()
+#         self.genericPlayerSlots = [[1,3],[2,3],[1,2],[1,1]]
+#         self.dealerSlot = [1,2]
+#         self.humanPlayerSlot = [2,3]
+
+
+#         #TODO add getHumanPlayer, getDealer, and getGenericPlayers to game classes
+#         self.playerWidgetList = []
+#         self.humanPlayerWidget = PlayerWidget()#init human player
+#         self.humanPlayerWidget.setPlayerObj(self.gameObj.getHumanPlayer())
+#         self.playerWidgetList.append(self.humanPlayerWidget)
+#         self.dealerPlayerWidget = PlayerWidget()#init dealer
+#         self.dealerPlayerWidget.setPlayerObj(self.gameObj.getDealer())
+#         self.playerWidgetList.append(self.dealerPlayerWidget)        
+#         self.genericPlayerList = self.gameObj.getGenericPlayers()
+#         for i in range(len(self.genericPlayerList)):    #init generic players
+#             self.genericPlayerWidget = PlayerWidget()
+#             self.genericPlayerWidget.setPlayerObj(self.genericPlayerList[i])
+#             self.playerWidgetList.append(self.genericPlayerWidget)
+
+
+#     def setGameplayWidget(self):
+#         self.gameplayWidget = QtWidgets.QGridLayout()
+#         self.middleGameplayWidget = QtWidgets.QVBoxLayout()
+#         self.potLayout = BetPotWidget(self)
+#         self.potLayout.update
+#         super(BetPotWidget,self.potLayout).__init__()
+
+#         self.middleGameplayWidget.addWidget(self.potLayout)
+
+#         #winningHandRankings text from http://www.thepokerpractice.com/how_to_play/
+#         if self.gameMode == 2:  #TODO also pass gameMode and gameObj??
+#             self.communityCardsWidget = CommunityCardsWidget
+#             #TODO add getCommunityCards() to THE class
+#             self.communityCardsWidget.setCommCardsPlayer(self.gameObj.getCommunityCards())
+#             self.winningHandRankings =  "Straight Flush - Five cards of the same suit in consecutive order\nFour of a Kind - Four cards of the same value\nFull House - A combination of three of a kind and a pair\nFlush - Any five cards of the same suit\nStraight - Five cards in consecutive order, suit irrelevant\nThree of a Kind - Three cards of the same value\nTwo Pair - Two sets of two cards of the same value\nOne Pair - Two cards of the same value\nHigh Card - The one card with the highest value"
+#             self.winningHandRankingsLabel = QtWidgets.QLabel(self.winningHandRankings)
+#             self.middleGameplayWidget.addLayout(self.communityCardsWidget)
+#             self.middleGameplayWidget.addWidget(self.winningHandRankings)
+
+
+
+#         self.gameplayWidget.addWidget(self.humanPlayerWidget,humanPlayerSlot[0],humanPlayerSlot[1]) #insert human player into layout
+#         self.gameplayWidget.addWidget(self.dealerPlayerWidget,dealerSlot[0],dealerSlot[1])#insert dealer into layout
+#         #insert generic players into layout
+#         for i in range(len(self.genericPlayerList)):
+#             self.gameplayWidget.addWidget(self.playerWidgetList[i+2],self.genericPlayerSlots[i][0],self.genericPlayerSlots[i][1])
+#         self.gameplayWidget.addLayout(middleGameplayWidget,2,2) #insert middleGameplayWidget
+
+#         #remove all layouts from background OR just set gameplayWidget as current widget
+#         self.setCentralWidget(self.gameplayWidget)
 
 
 class PlayerWidget(QtWidgets.QWidget):
