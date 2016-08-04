@@ -113,7 +113,7 @@ class Background(QtWidgets.QWidget):
     def setInitLayout(self):
                 ## Inital screen elements ##
         self.logo = QtWidgets.QLabel()
-        self.logoPixmap = QtGui.QPixmap("logo.jpg")
+        self.logoPixmap = QtGui.QPixmap("logo.png")
         self.logo.setPixmap(self.logoPixmap)
         self.newButton = QtWidgets.QPushButton('New Game')
         self.newButton.setToolTip('Begin a new game')
