@@ -66,10 +66,7 @@ class Dealer:
 			card = self.deck.getCard()
 			self.giveCard(card)
 			temp = self.getValue(card[0])
-			if temp == 11 and score > 10:
-				score += 1
-			else:
-				score += temp
+			score += temp
 			if score > 21:
 				for i in range(0, len(self.hand)-1):
 					if self.hand[i][0] == 14 and i not in self.aces:
@@ -93,10 +90,7 @@ class Dealer:
 		card = self.deck.getCard()
 		player.giveCard(card)
 		temp = self.getValue(card[0])
-		if temp == 11 and player.score > 10:
-			score = 1
-		else:
-			score = temp
+		score = temp
 		player.score += score
 		if player.score > 21:
 			for i in range(0,len(player.hand)-1):
