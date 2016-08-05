@@ -20,7 +20,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-from blackjack import BlackJack
+from dealer import *
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -139,7 +139,7 @@ class Background(QtWidgets.QWidget):
         self.playersLabel.setStyleSheet("font: bold; color: white; font-size:24px; background-position: center")
         self.playersLabel.setVisible(False)
         self.playersCombo = QtWidgets.QComboBox()
-        self.playersCombo.addItems(['1','2','3','4'])
+        self.playersCombo.addItems(['1'])   #,'2','3','4'
         self.playersCombo.setVisible(False)
         self.playersComboOk = QtWidgets.QPushButton('OK')
         self.playersComboOk.clicked.connect(self.getNumPlayers)
@@ -219,7 +219,7 @@ class Background(QtWidgets.QWidget):
         self.gameObj = None
         #TODO change to fit blackjack and THE classes
         if self.gameMode == 1:
-            self.gameObj = BlackJack(self.numPlayers+2)  
+            self.gameObj = BlackJack()  # 2 = numPlayers  
             self.initGameplayWidget()
         else: #gameMode == 2
             self.gameObj = TexasHoldEm()
@@ -255,15 +255,16 @@ class Background(QtWidgets.QWidget):
 
 
 
-        self.spadesImgs = ['2_of_spades.png', '3_of_spades.png', '4_of_spades.png', '5_of_spades.png', '6_of_spades.png', '7_of_spades.png', '8_of_spades.png', '9_of_spades.png', '10_of_spades.png', "jack_of_spades2", "queen_of_spades2", "king_of_spades2", "ace_of_spades2"]
-        self.heartsImgs = ['2_of_hearts.png', '3_of_hearts.png', '4_of_hearts.png', '5_of_hearts.png', '6_of_hearts.png', '7_of_hearts.png', '8_of_hearts.png', '9_of_hearts.png', '10_of_hearts.png', "jack_of_hearts2", "queen_of_hearts2", "king_of_hearts2", "ace_of_hearts2"]
-        self.clubsImgs = ['2_of_clubs.png', '3_of_clubs.png', '4_of_clubs.png', '5_of_clubs.png', '6_of_clubs.png', '7_of_clubs.png', '8_of_clubs.png', '9_of_clubs.png', '10_of_clubs.png', "jack_of_clubs2", "queen_of_clubs2", "king_of_clubs2", "ace_of_clubs2"]
-        self.diamondsImgs = ['2_of_diamonds.png', '3_of_diamonds.png', '4_of_diamondsades.png', '5_of_diamonds.png', '6_of_diamonds.png', '7_of_diamonds.png', '8_of_diamonds.png', '9_of_diamonds.png', '10_of_diamonds.png', "jack_of_diamonds2", "queen_of_diamonds2", "king_of_diamonds2", "ace_of_diamonds2"]
 
 
-
+        ## Set card images ##
         self.cardBack = QPixmap('CardImgs/back2.jpg')
-            # self.cardLabel.setPixmap(self.cardBack)
+        self.dealerCard1Num = self.gameObj.dealer.hand[0]
+        self.dealerCard1Face = self.findFace(self.dealerCard1Num)
+        self.playerCard1Num = self.gameObj.player.hand[0]
+        self.playerCard2Num = self.gameObj.player.hand[1]
+        self.playerCard1Face = self.findFace(self.playerCard1Num)
+        self.playerCard2Face = self.findFace(self.playerCard2Num)
 
 
         dealerCard1 = QtWidgets.QLabel()
@@ -272,7 +273,7 @@ class Background(QtWidgets.QWidget):
         playerCard1 = QtWidgets.QLabel()
         playerCard2 = QtWidgets.QLabel()
 
-        dealerCard1.setPixmap(self.cardBack)
+        dealerCard1.setPixmap(self.dealerCard1Face)
         dealerCard2.setPixmap(self.cardBack)
         playerCard1.setPixmap(self.cardBack)
         playerCard2.setPixmap(self.cardBack)
@@ -282,7 +283,7 @@ class Background(QtWidgets.QWidget):
         dealerBox.addWidget(dealerCard2)
 
         playerBox.addWidget(playerCard1)
-        playerBox.addWidget(playerCard1)
+        playerBox.addWidget(playerCard2)
 
 
         #self.testLabel = QtWidgets.QLabel('Hello')
@@ -301,31 +302,35 @@ class Background(QtWidgets.QWidget):
 
 
 
-    def showFront(self,b):
-        if b == True:   #show front of card
-            #TODO get cardNumIndex from gameObj?
-            self.cardNumIndex = -1
-            if self.cardNumber == "Ace":
-                self.cardNumIndex == 12
-            elif self.cardNumber == "King":
-                self.cardNumIndex == 11
-            elif self.cardNumber == "Queen":
-                self.cardNumIndex == 10
-            elif self.cardNumber == "Jack":
-                self.cardNumIndex == 9
-            else:
-                self.cardNumIndex == int(self.cardNumber)
+    def findFace(self,n): #n = cardnum tuple
 
-            if self.cardSuit == "Spades":
-                self.cardLabel.setPixmap(self.spadesImgs[cardNumIndex])
-            elif self.cardSuit == "Hearts":
-                self.cardLabel.setPixmap(self.heartsImgs[cardNumIndex])
-            elif self.cardSuit == "Clubs":
-                self.cardLabel.setPixmap(self.clubsImgs[cardNumIndex])
-            else: #self.cardSuit == "Diamonds":
-                self.cardLabel.setPixmap(self.diamondsImgs[cardNumIndex])                                                
-        else:   #show card back
-            self.cardLabel.setPixmap("cardBack.jpg")
+        self.spadesImgs = ['2_of_spades.png', '3_of_spades.png', '4_of_spades.png', '5_of_spades.png', '6_of_spades.png', '7_of_spades.png', '8_of_spades.png', '9_of_spades.png', '10_of_spades.png', "jack_of_spades2", "queen_of_spades2", "king_of_spades2", "ace_of_spades2"]
+        self.heartsImgs = ['2_of_hearts.png', '3_of_hearts.png', '4_of_hearts.png', '5_of_hearts.png', '6_of_hearts.png', '7_of_hearts.png', '8_of_hearts.png', '9_of_hearts.png', '10_of_hearts.png', "jack_of_hearts2", "queen_of_hearts2", "king_of_hearts2", "ace_of_hearts2"]
+        self.clubsImgs = ['2_of_clubs.png', '3_of_clubs.png', '4_of_clubs.png', '5_of_clubs.png', '6_of_clubs.png', '7_of_clubs.png', '8_of_clubs.png', '9_of_clubs.png', '10_of_clubs.png', "jack_of_clubs2", "queen_of_clubs2", "king_of_clubs2", "ace_of_clubs2"]
+        self.diamondsImgs = ['2_of_diamonds.png', '3_of_diamonds.png', '4_of_diamondsades.png', '5_of_diamonds.png', '6_of_diamonds.png', '7_of_diamonds.png', '8_of_diamonds.png', '9_of_diamonds.png', '10_of_diamonds.png', "jack_of_diamonds2", "queen_of_diamonds2", "king_of_diamonds2", "ace_of_diamonds2"]
+
+        if n[0] == "Ace":
+            self.cardNumIndex == 12
+        elif n[0] == "King":
+            self.cardNumIndex == 11
+        elif n[0] == "Queen":
+            self.cardNumIndex == 10
+        elif n[0] == "Jack":
+            self.cardNumIndex == 9
+        else:
+            self.cardNumIndex == int(self.cardNumber)
+
+        if n[1] == "Spades":
+            self.cardFaceFile = self.spadesImgs[cardNumIndex]
+        elif n[1] == "Hearts":
+            self.cardFaceFile = self.heartsImgs[cardNumIndex]
+        elif n[1] == "Clubs":
+            self.cardFaceFile = self.clubsImgs[cardNumIndex]
+        else: #n[1] == "Diamonds":
+            self.cardFaceFile = self.diamondsImgs[cardNumIndex]
+
+        self.imgString = "CardImgs/" + self.cardFaceFile
+        return self.imgString
 
     def showGameplayWidget(self):
         
