@@ -59,15 +59,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.mainLayout.tStyle = self.mainLayout.changeTableStyle(2)
             self.mainLayout.repaint()
 
-    ## closeEvent from peg_game.py example code ##
-    # def closeEvent(self,event):
-    #     popup = QuitPopup()
-    #     reply = popup.exec_()
-    #     if reply == QtWidgets.QMessageBox.Yes:
-    #         event.accept()
-    #     else:
-    #         event.ignore()
-
 ## App Background Layout (level 1) ##
 class Background(QtWidgets.QWidget):
     def __init__(self,parent):
@@ -185,7 +176,6 @@ class Background(QtWidgets.QWidget):
         self.preGameInfoSetVisible(True)
 
 
-
     def loadGame(self):
         print("background.loadGame triggered")
     #     #open loadPopup
@@ -197,14 +187,11 @@ class Background(QtWidgets.QWidget):
         self.numPlayers = self.playersCombo.currentIndex() + 1
         self.gameMode = self.gameModeCombo.currentIndex() + 1
 
-        # self.gp = GameplayWidget(self, self.gameMode, self.gameObj)
         self.preGameInfoSetVisible(False)
         if self.hbox.isEnabled():
             self.hbox.setEnabled(False)
 
-        self.initGame()
-        # self.setLayout(self.gp)
-        
+        self.initGame()        
 
     def preGameInfoSetVisible(self,b):
         self.gameModeLabel.setVisible(b)
@@ -241,8 +228,6 @@ class Background(QtWidgets.QWidget):
 
 
     def initGameplayWidget(self):
-        self.setGameplayWidget()
-        self.showGameplayWidget()
         self.count = 2
         
         #remove beginning menu layout 
@@ -269,29 +254,19 @@ class Background(QtWidgets.QWidget):
 
 
 
-        ## Set card images ##
+        ## Set card widgets ##
         self.cardBack = QPixmap('CardImgs/back2.jpg')
-        self.dealerCard1Num = self.gameObj.dealer.hand[0]
-        self.dealerCard1Face = self.findFace(self.dealerCard1Num)
-        self.playerCard1Num = self.gameObj.player.hand[0]
-        self.playerCard2Num = self.gameObj.player.hand[1]
-        self.playerCard1Face = self.findFace(self.playerCard1Num)
-        self.playerCard2Face = self.findFace(self.playerCard2Num)
-        self.dCard1QPix = QtGui.QPixmap(self.dealerCard1Face)
-        self.pCard1QPix = QtGui.QPixmap(self.playerCard1Face)
-        self.pCard2QPix = QtGui.QPixmap(self.playerCard2Face)
-
-
-        self.dealerBox.addStretch(.5)
-        self.playerBox.addStretch(.5)
-
-
-        self.cardBack = QPixmap('CardImgs/back2.jpg')
-            # self.cardLabel.setPixmap(self.cardBack)
-
 
         self.dealerCard1 = QtWidgets.QLabel()
         self.dealerCard2 = QtWidgets.QLabel()
+        self.dealerCard3 = QtWidgets.QLabel()
+        self.dealerCard4 = QtWidgets.QLabel()
+        self.dealerCard5 = QtWidgets.QLabel()
+        self.dealerCard6 = QtWidgets.QLabel()
+        self.dealerCard7 = QtWidgets.QLabel()
+        self.dealerCard8 = QtWidgets.QLabel()
+        self.dealerCard9 = QtWidgets.QLabel()
+        self.dealerCard10 = QtWidgets.QLabel()        
 
         self.playerCard1 = QtWidgets.QLabel()
         self.playerCard2 = QtWidgets.QLabel()
@@ -299,39 +274,71 @@ class Background(QtWidgets.QWidget):
         self.playerCard4 = QtWidgets.QLabel()
         self.playerCard5 = QtWidgets.QLabel()
         self.playerCard6 = QtWidgets.QLabel()
+        self.playerCard7 = QtWidgets.QLabel()
+        self.playerCard8 = QtWidgets.QLabel()
+        self.playerCard9 = QtWidgets.QLabel()
+        self.playerCard10 = QtWidgets.QLabel()
+        self.playerCard11 = QtWidgets.QLabel()        
 
-
-        self.dealerCard1.setPixmap(self.dCard1QPix)
-        self.dealerCard2.setPixmap(self.cardBack)
-        self.playerCard1.setPixmap(self.pCard1QPix)
-        self.playerCard2.setPixmap(self.pCard2QPix)
+        self.updateCards()
 
         self.dealerCard1.setScaledContents(True)
         self.dealerCard1.setMaximumSize(75,125)
-
         self.dealerCard2.setScaledContents(True)
         self.dealerCard2.setMaximumSize(75,125)
+        self.dealerCard3.setScaledContents(True)
+        self.dealerCard3.setMaximumSize(75,125)
+        self.dealerCard4.setScaledContents(True)
+        self.dealerCard4.setMaximumSize(75,125)
+        self.dealerCard5.setScaledContents(True)
+        self.dealerCard5.setMaximumSize(75,125)
+        self.dealerCard6.setScaledContents(True)
+        self.dealerCard6.setMaximumSize(75,125)
+        self.dealerCard7.setScaledContents(True)
+        self.dealerCard7.setMaximumSize(75,125)
+        self.dealerCard8.setScaledContents(True)
+        self.dealerCard8.setMaximumSize(75,125)
+        self.dealerCard9.setScaledContents(True)
+        self.dealerCard9.setMaximumSize(75,125)
+        self.dealerCard10.setScaledContents(True)
+        self.dealerCard10.setMaximumSize(75,125)                
 
         self.playerCard1.setScaledContents(True)
         self.playerCard1.setMaximumSize(75,125)
-
         self.playerCard2.setScaledContents(True)
         self.playerCard2.setMaximumSize(75,125)
-
         self.playerCard3.setScaledContents(True)
         self.playerCard3.setMaximumSize(75,125)
-
         self.playerCard4.setScaledContents(True)
         self.playerCard4.setMaximumSize(75,125)
-
         self.playerCard5.setScaledContents(True)
         self.playerCard5.setMaximumSize(75,125)
-
         self.playerCard6.setScaledContents(True)
         self.playerCard6.setMaximumSize(75,125)
+        self.playerCard7.setScaledContents(True)
+        self.playerCard7.setMaximumSize(75,125)
+        self.playerCard8.setScaledContents(True)
+        self.playerCard8.setMaximumSize(75,125)
+        self.playerCard9.setScaledContents(True)
+        self.playerCard9.setMaximumSize(75,125)
+        self.playerCard10.setScaledContents(True)
+        self.playerCard10.setMaximumSize(75,125)
+        self.playerCard11.setScaledContents(True)
+        self.playerCard11.setMaximumSize(75,125)       
+
+        self.dealerBox.addStretch(.5)
+        self.playerBox.addStretch(.5)
 
         self.dealerBox.addWidget(self.dealerCard1)
         self.dealerBox.addWidget(self.dealerCard2)
+        self.dealerBox.addWidget(self.dealerCard3)
+        self.dealerBox.addWidget(self.dealerCard4)
+        self.dealerBox.addWidget(self.dealerCard5)
+        self.dealerBox.addWidget(self.dealerCard6) 
+        self.dealerBox.addWidget(self.dealerCard7)
+        self.dealerBox.addWidget(self.dealerCard8)
+        self.dealerBox.addWidget(self.dealerCard9)
+        self.dealerBox.addWidget(self.dealerCard10)                       
 
         self.playerBox.addWidget(self.playerCard1)
         self.playerBox.addWidget(self.playerCard2)
@@ -339,6 +346,11 @@ class Background(QtWidgets.QWidget):
         self.playerBox.addWidget(self.playerCard4)
         self.playerBox.addWidget(self.playerCard5)
         self.playerBox.addWidget(self.playerCard6)
+        self.playerBox.addWidget(self.playerCard7)
+        self.playerBox.addWidget(self.playerCard8)
+        self.playerBox.addWidget(self.playerCard9)
+        self.playerBox.addWidget(self.playerCard10)
+        self.playerBox.addWidget(self.playerCard11)
 
         self.dealerBox.addStretch(.5)
         self.playerBox.addStretch(.5)
@@ -348,12 +360,6 @@ class Background(QtWidgets.QWidget):
         
         self.message.setAlignment(Qt.AlignCenter)
         self.message.setMargin(0)
-
-
-
-
-        #self.testLabel = QtWidgets.QLabel('Hello')
-        #self.testLabel.setStyleSheet("font: bold; color: white; font-size:24px; background-position: center")
         
         self.moveBox.addWidget(self.dealCards)
         self.moveBox.addWidget(self.hit)
@@ -367,7 +373,23 @@ class Background(QtWidgets.QWidget):
         self.setLayout(self.contentBox)
 
 
-        print self.gameObj.player
+    def updateCards(self):
+        self.dealerCard1Num = self.gameObj.dealer.hand[0]
+        self.dealerCard2Num = self.gameObj.dealer.hand[1]
+        self.dealerCard1Face = self.findFace(self.dealerCard1Num)
+        self.dealerCard2Face = self.findFace(self.dealerCard2Num)
+        self.playerCard1Num = self.gameObj.player.hand[0]
+        self.playerCard2Num = self.gameObj.player.hand[1]
+        self.playerCard1Face = self.findFace(self.playerCard1Num)
+        self.playerCard2Face = self.findFace(self.playerCard2Num)
+        self.dCard1QPix = QtGui.QPixmap(self.dealerCard1Face)
+        self.pCard1QPix = QtGui.QPixmap(self.playerCard1Face)
+        self.pCard2QPix = QtGui.QPixmap(self.playerCard2Face)
+
+        self.dealerCard1.setPixmap(self.dCard1QPix)
+        self.dealerCard2.setPixmap(self.cardBack)
+        self.playerCard1.setPixmap(self.pCard1QPix)
+        self.playerCard2.setPixmap(self.pCard2QPix)  
 
 
     def findFace(self,n): #n = cardnum tuple
@@ -378,8 +400,6 @@ class Background(QtWidgets.QWidget):
         self.diamondsImgs = ['2_of_diamonds.png', '3_of_diamonds.png', '4_of_diamondsades.png', '5_of_diamonds.png', '6_of_diamonds.png', '7_of_diamonds.png', '8_of_diamonds.png', '9_of_diamonds.png', '10_of_diamonds.png', "jack_of_diamonds2", "queen_of_diamonds2", "king_of_diamonds2", "ace_of_diamonds2"]
 
         self.cardNumIndex = n[0] - 2
-        print n
-        print self.cardNumIndex
 
         if n[1] == "Spades":
             self.cardFaceFile = self.spadesImgs[self.cardNumIndex]
@@ -392,96 +412,9 @@ class Background(QtWidgets.QWidget):
 
         self.imgString = "CardImgs/" + self.cardFaceFile
         return self.imgString
-        
-
-
-
-    def showFront(self,b):
-        if b == True:   #show front of card
-            #TODO get cardNumIndex from gameObj?
-            self.cardNumIndex = -1
-            if self.cardNumber == "Ace":
-                self.cardNumIndex == 12
-            elif self.cardNumber == "King":
-                self.cardNumIndex == 11
-            elif self.cardNumber == "Queen":
-                self.cardNumIndex == 10
-            elif self.cardNumber == "Jack":
-                self.cardNumIndex == 9
-            else:
-                self.cardNumIndex == int(self.cardNumber)
-
-            if self.cardSuit == "Spades":
-                self.cardLabel.setPixmap(self.spadesImgs[cardNumIndex])
-            elif self.cardSuit == "Hearts":
-                self.cardLabel.setPixmap(self.heartsImgs[cardNumIndex])
-            elif self.cardSuit == "Clubs":
-                self.cardLabel.setPixmap(self.clubsImgs[cardNumIndex])
-            else: #self.cardSuit == "Diamonds":
-                self.cardLabel.setPixmap(self.diamondsImgs[cardNumIndex])                                                
-        else:   #show card back
-            self.cardLabel.setPixmap("cardBack.jpg")
-
-    def showGameplayWidget(self):
-        
-        pass
-        
-        
-        
-
-        
-
-
-    def setGameplayWidget(self):
-        pass
-
-    # class CardWidget(QtWidgets.QWidget):
-    #     # def __init__(self,parent=None): 
-    #         # QtWidgets.QWidget.__init__(self, parent)
-    #     def __init__(self):
-    #         # super(QtWidgets.QWidget).__init__()
-    #         QtWidgets.QWidget.__init__(self, parent)
-
-    #         self.cardSuit = ""
-    #         self.cardNumber = ""
-    #         self.cardBack = QPixmap('CardImgs/back2.jpg')
-    #         self.cardLabel = QtWidgets.QLabel()
-    #         self.cardLabel.setPixmap(self.cardBack)
-    #         self.cardLabel.show()
-
-    #     def setCard(c): #c = a card tuple
-    #         self.cardSuit = c[1] #2nd value in card tuple
-    #         self.cardNumber = c[0] #1st value in card tuple
-
-    #     def showFront(self,b):
-    #         if b == True:   #show front of card
-    #             #TODO get cardNumIndex from gameObj?
-    #             self.cardNumIndex = -1
-    #             if self.cardNumber == "Ace":
-    #                 self.cardNumIndex == 12
-    #             elif self.cardNumber == "King":
-    #                 self.cardNumIndex == 11
-    #             elif self.cardNumber == "Queen":
-    #                 self.cardNumIndex == 10
-    #             elif self.cardNumber == "Jack":
-    #                 self.cardNumIndex == 9
-    #             else:
-    #                 self.cardNumIndex == int(self.cardNumber)
-
-    #             if self.cardSuit == "Spades":
-    #                 self.cardLabel.setPixmap(self.spadesImgs[cardNumIndex])
-    #             elif self.cardSuit == "Hearts":
-    #                 self.cardLabel.setPixmap(self.heartsImgs[cardNumIndex])
-    #             elif self.cardSuit == "Clubs":
-    #                 self.cardLabel.setPixmap(self.clubsImgs[cardNumIndex])
-    #             else: #self.cardSuit == "Diamonds":
-    #                 self.cardLabel.setPixmap(self.diamondsImgs[cardNumIndex])                                                
-    #         else:   #show card back
-    #             self.cardLabel.setPixmap("cardBack.jpg")
-
 
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     mainFrame = MainWindow()
-    app.exec_()
+app.exec_()
