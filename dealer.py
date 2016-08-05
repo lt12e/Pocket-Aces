@@ -1,52 +1,43 @@
 #Dealer class
 
-from playingcards import PlayingCards
+import random
+
+class BlackJack:
+    def __init__(self, nplayers):
+        self.numPlayers = nplayers  
+        #player1 = Dealer, player2 = dealer, players3-6 = computer        
+        self.players = []
+        self.dealer = Dealer()
+        self.player = Player()
+        self.players.append(self.dealer)
+        self.players.append(self.player)
+        if nplayers > 1:
+            for i in range(self.numPlayers-1):
+                self.comp = Player()
+                self.players.append(self.comp)
+
+        self.dealer.shuffle()
+        self.dealer.deal(self.players)
 
 class Dealer:
-	'Poker Dealer class'
+	'Blackjack Dealer class'
 
 	def __init__(self):
 	#Initializes a list for dealer's hand
 	#Initializes the deck from PlayingCards class
 		self.hand = []
-		self.hand2 = [] #for Blackjack if hand is split
 		self.deck = PlayingCards()
-		self.name = ""
-		self.money = 2000
-		self.betAmt = 0
 
-	def __str__(self):
-	#Defines print to print out the current HAND
-	#Removes extra characters ex. []()',
-		after = ""
-		formatting = "[]()',"
-		for i in self.hand:
-			before = str(i)
-			for i in range(len(before)):
-				if before[i] not in formatting:
-					after += before[i]
-			after += "\n"
-		return after
-
-	def deal(self, players, game="blackjack"):
+	def deal(self, players):
 	#Deals cards to all players
-	#Defaulted to five cards each for five card draw
-	#game can be set to "texas" for two cards each
-		if game == "texas":
-			for card in range(2):
-				for player in players:
-					player.giveCard(self.deck.getCard())
-				self.giveCard(self.deck.getCard())
-		elif game == "five":
-			for card in range(5):
-				for player in players:
-					player.giveCard(self.deck.getCard())
-				self.giveCard(self.deck.getCard())
-		elif game == "blackjack":
-			for card in range(2):
-				for player in players:
-					player.giveCard(self.deck.getCard())
-				self.giveCard(self.deck.getCard())
+		for card in range(2):
+			for player in players:
+				player.giveCard(self.getCard())
+			self.giveCard(self.getCard())
+
+	def getCard(self):
+	#Get card from deck
+		self.deck.getCard()
 
 	def giveCard(self, card):
 	#Takes card from deck and gives to hand
@@ -63,53 +54,78 @@ class Dealer:
 		self.deck.initialize()
 		self.deck.shuffle()
 
-	def swap(self, player, card1, card2=0, card3=0):
-	#Allows player to swap up to three cards for new ones
-	#Removes each card from players hand
-	#Appends new card after removal
-		hand = player.hand
-		one = hand[card1]
-		if card2:
-			two = hand[card2]
-			if card3:
-				hand.remove(hand[card3])
-				hand.append(self.deck.getCard())
-			hand.remove(two)
-			hand.append(self.deck.getCard())
-		hand.remove(one)
-		hand.append(self.deck.getCard())
-		return hand
+	def play(self):
+		score = self.getValue(self.hand[0][0]) + self.getValue(self.hand[1][0])
+		while score < 17:
+			card = self.getCard()
+			self.giveCard(card)
+			temp = self.getValue(card[0])
+			if temp == 11 and score > 10:
+				score += 1
+			else:
+				score += temp
+		return score
 
-	def setName(self,n):
-		#Sets the Dealer's name
-		self.name = n
+	def getValue(self, number):
+		if number == 14:
+			return 11
+		elif number > 9:
+			return 10
+		else:
+			return number
 
-	def getName(self):
-		return self.name
+	def hit(self, player):
+		score = 0
+		if len(player.hand) == 2:
+			score = self.getValue(player.hand[0][0]) + self.getValue(player.hand[1][0])
+		card = self.getCard()
+		player.giveCard(card)
+		temp = self.getValue(card[0])
+		if temp == 11 and score > 10:
+			score += 1
+		else:
+			score += temp
+		return score
 
-	def setMoney(self, m):
-		self.money = m
-
-	def getMoney(self):
-		return self.money
 
 class Player(Dealer):
-	'Poker Player sub-class'
+	'Blackjack Player sub-class'
 	def __init__(self):
 	#The player is just a derived form of the Dealer
 	#The player has a hand, but not their own deck
 	#All functions with the hand are inherited
 		self.hand = []
 
-if __name__ == '__main__':
-	print "Creating a quick game"
-	dealer = Dealer()
-	players = [Player(), Player(), Player(), Player()]
-	dealer.shuffle()
-	dealer.deal(players)
-	print dealer
-	for player in players:
-		print player
-	dealer.swap(players[3], 0, 1, 2)
-	print "swapped"
-	print players[3]
+class PlayingCards:
+	'Deck of cards class'
+	
+	suit = ["Spades", "Hearts", "Clubs", "Diamonds"]
+	number = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+
+	def __init__(self):
+	#Makes a list for the deck
+	#Then initializes the deck using initialize function
+		self.deck = []
+		self.initialize()
+
+	def initialize(self):
+	#Initializes the deck
+	#Deletes the current deck if necessary
+	#Creates a new deck and returns it
+		for card in self.deck:
+			del card
+		for i in range(4):
+			for k in range(13):
+				card = (self.number[k], self.suit[i])
+				self.deck.append(card)
+		return self.deck
+
+	def shuffle(self):
+	#Shuffles the deck seven times and returns the deck
+		for i in range(7):
+			random.shuffle(self.deck)
+		return self.deck
+
+	def getCard(self):
+	#Pops a card from the deck and returns the card
+		return self.deck.pop()
