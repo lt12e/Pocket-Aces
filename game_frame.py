@@ -22,8 +22,6 @@ from PyQt5.QtCore import *
 
 from blackjack import BlackJack
 
-
-
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
@@ -250,14 +248,37 @@ class Background(QtWidgets.QWidget):
         self.stand.setFixedWidth(80)
 
         #gameplay layout
-        newBox = QHBoxLayout()
+        dealerBox = QHBoxLayout()
+        playerBox = QHBoxLayout()
+        moveBox = QHBoxLayout()
+        contentBox = QVBoxLayout()
+
+        dealerCard1 = self.CardWidget(self)
+        dealerCard2 = self.CardWidget(self)
+
+        playerCard1 = self.CardWidget(self)
+        playerCard2 = self.CardWidget(self)
+
+        dealerBox.addWidget(dealerCard1)
+        dealerBox.addWidget(dealerCard2)
+
+        playerBox.addWidget(playerCard1)
+        playerBox.addWidget(playerCard1)
+
+
         #self.testLabel = QtWidgets.QLabel('Hello')
         #self.testLabel.setStyleSheet("font: bold; color: white; font-size:24px; background-position: center")
         
-        newBox.addWidget(self.dealCards)
-        newBox.addWidget(self.hit)
-        newBox.addWidget(self.stand)
-        self.setLayout(newBox)
+        moveBox.addWidget(self.dealCards)
+        moveBox.addWidget(self.hit)
+        moveBox.addWidget(self.stand)
+
+        contentBox.addLayout(dealerBox)
+        contentBox.addLayout(playerBox)
+        contentBox.addLayout(moveBox)
+
+        self.setLayout(contentBox)
+        
 
 
 
@@ -275,6 +296,46 @@ class Background(QtWidgets.QWidget):
 
     def setGameplayWidget(self):
         pass
+
+    class CardWidget(QtWidgets.QWidget):
+        def __init__(self,parent=None): 
+            QtWidgets.QWidget.__init__(self, parent)
+            self.cardSuit = ""
+            self.cardNumber = ""
+            self.cardBack = QPixmap('CardImgs/back2.jpg')
+            self.cardLabel = QtWidgets.QLabel()
+            self.cardLabel.setPixmap(self.cardBack)
+            self.cardLabel.show()
+
+        def setCard(c): #c = a card tuple
+            self.cardSuit = c[1] #2nd value in card tuple
+            self.cardNumber = c[0] #1st value in card tuple
+
+        def showFront(self,b):
+            if b == True:   #show front of card
+                #TODO get cardNumIndex from gameObj?
+                self.cardNumIndex = -1
+                if self.cardNumber == "Ace":
+                    self.cardNumIndex == 12
+                elif self.cardNumber == "King":
+                    self.cardNumIndex == 11
+                elif self.cardNumber == "Queen":
+                    self.cardNumIndex == 10
+                elif self.cardNumber == "Jack":
+                    self.cardNumIndex == 9
+                else:
+                    self.cardNumIndex == int(self.cardNumber)
+
+                if self.cardSuit == "Spades":
+                    self.cardLabel.setPixmap(self.spadesImgs[cardNumIndex])
+                elif self.cardSuit == "Hearts":
+                    self.cardLabel.setPixmap(self.heartsImgs[cardNumIndex])
+                elif self.cardSuit == "Clubs":
+                    self.cardLabel.setPixmap(self.clubsImgs[cardNumIndex])
+                else: #self.cardSuit == "Diamonds":
+                    self.cardLabel.setPixmap(self.diamondsImgs[cardNumIndex])                                                
+            else:   #show card back
+                self.cardLabel.setPixmap("cardBack.jpg")
 
 
 
