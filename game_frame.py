@@ -301,31 +301,31 @@ class Background(QtWidgets.QWidget):
 
 
 
-        def showFront(self,b):
-            if b == True:   #show front of card
-                #TODO get cardNumIndex from gameObj?
-                self.cardNumIndex = -1
-                if self.cardNumber == "Ace":
-                    self.cardNumIndex == 12
-                elif self.cardNumber == "King":
-                    self.cardNumIndex == 11
-                elif self.cardNumber == "Queen":
-                    self.cardNumIndex == 10
-                elif self.cardNumber == "Jack":
-                    self.cardNumIndex == 9
-                else:
-                    self.cardNumIndex == int(self.cardNumber)
+    def showFront(self,b):
+        if b == True:   #show front of card
+            #TODO get cardNumIndex from gameObj?
+            self.cardNumIndex = -1
+            if self.cardNumber == "Ace":
+                self.cardNumIndex == 12
+            elif self.cardNumber == "King":
+                self.cardNumIndex == 11
+            elif self.cardNumber == "Queen":
+                self.cardNumIndex == 10
+            elif self.cardNumber == "Jack":
+                self.cardNumIndex == 9
+            else:
+                self.cardNumIndex == int(self.cardNumber)
 
-                if self.cardSuit == "Spades":
-                    self.cardLabel.setPixmap(self.spadesImgs[cardNumIndex])
-                elif self.cardSuit == "Hearts":
-                    self.cardLabel.setPixmap(self.heartsImgs[cardNumIndex])
-                elif self.cardSuit == "Clubs":
-                    self.cardLabel.setPixmap(self.clubsImgs[cardNumIndex])
-                else: #self.cardSuit == "Diamonds":
-                    self.cardLabel.setPixmap(self.diamondsImgs[cardNumIndex])                                                
-            else:   #show card back
-                self.cardLabel.setPixmap("cardBack.jpg")
+            if self.cardSuit == "Spades":
+                self.cardLabel.setPixmap(self.spadesImgs[cardNumIndex])
+            elif self.cardSuit == "Hearts":
+                self.cardLabel.setPixmap(self.heartsImgs[cardNumIndex])
+            elif self.cardSuit == "Clubs":
+                self.cardLabel.setPixmap(self.clubsImgs[cardNumIndex])
+            else: #self.cardSuit == "Diamonds":
+                self.cardLabel.setPixmap(self.diamondsImgs[cardNumIndex])                                                
+        else:   #show card back
+            self.cardLabel.setPixmap("cardBack.jpg")
 
     def showGameplayWidget(self):
         
