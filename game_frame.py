@@ -260,33 +260,6 @@ class Background(QtWidgets.QWidget):
         self.clubsImgs = ['2_of_clubs.png', '3_of_clubs.png', '4_of_clubs.png', '5_of_clubs.png', '6_of_clubs.png', '7_of_clubs.png', '8_of_clubs.png', '9_of_clubs.png', '10_of_clubs.png', "jack_of_clubs2", "queen_of_clubs2", "king_of_clubs2", "ace_of_clubs2"]
         self.diamondsImgs = ['2_of_diamonds.png', '3_of_diamonds.png', '4_of_diamondsades.png', '5_of_diamonds.png', '6_of_diamonds.png', '7_of_diamonds.png', '8_of_diamonds.png', '9_of_diamonds.png', '10_of_diamonds.png', "jack_of_diamonds2", "queen_of_diamonds2", "king_of_diamonds2", "ace_of_diamonds2"]
 
-[0] #1st value in card tuple
-
-        def showFront(self,b):
-            if b == True:   #show front of card
-                #TODO get cardNumIndex from gameObj?
-                self.cardNumIndex = -1
-                if self.cardNumber == "Ace":
-                    self.cardNumIndex == 12
-                elif self.cardNumber == "King":
-                    self.cardNumIndex == 11
-                elif self.cardNumber == "Queen":
-                    self.cardNumIndex == 10
-                elif self.cardNumber == "Jack":
-                    self.cardNumIndex == 9
-                else:
-                    self.cardNumIndex == int(self.cardNumber)
-
-                if self.cardSuit == "Spades":
-                    self.cardLabel.setPixmap(self.spadesImgs[cardNumIndex])
-                elif self.cardSuit == "Hearts":
-                    self.cardLabel.setPixmap(self.heartsImgs[cardNumIndex])
-                elif self.cardSuit == "Clubs":
-                    self.cardLabel.setPixmap(self.clubsImgs[cardNumIndex])
-                else: #self.cardSuit == "Diamonds":
-                    self.cardLabel.setPixmap(self.diamondsImgs[cardNumIndex])                                                
-            else:   #show card back
-                self.cardLabel.setPixmap("cardBack.jpg")
 
 
         self.cardBack = QPixmap('CardImgs/back2.jpg')
@@ -328,7 +301,31 @@ class Background(QtWidgets.QWidget):
 
 
 
+        def showFront(self,b):
+            if b == True:   #show front of card
+                #TODO get cardNumIndex from gameObj?
+                self.cardNumIndex = -1
+                if self.cardNumber == "Ace":
+                    self.cardNumIndex == 12
+                elif self.cardNumber == "King":
+                    self.cardNumIndex == 11
+                elif self.cardNumber == "Queen":
+                    self.cardNumIndex == 10
+                elif self.cardNumber == "Jack":
+                    self.cardNumIndex == 9
+                else:
+                    self.cardNumIndex == int(self.cardNumber)
 
+                if self.cardSuit == "Spades":
+                    self.cardLabel.setPixmap(self.spadesImgs[cardNumIndex])
+                elif self.cardSuit == "Hearts":
+                    self.cardLabel.setPixmap(self.heartsImgs[cardNumIndex])
+                elif self.cardSuit == "Clubs":
+                    self.cardLabel.setPixmap(self.clubsImgs[cardNumIndex])
+                else: #self.cardSuit == "Diamonds":
+                    self.cardLabel.setPixmap(self.diamondsImgs[cardNumIndex])                                                
+            else:   #show card back
+                self.cardLabel.setPixmap("cardBack.jpg")
 
     def showGameplayWidget(self):
         
