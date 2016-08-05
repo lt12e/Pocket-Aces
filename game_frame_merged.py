@@ -251,12 +251,65 @@ class Background(QtWidgets.QWidget):
         self.gameObj.dealer.deal(self.gameObj.player)
         self.set_cards()
         self.count = 2
+        # del self.gameObj.player.aces[:]
 
     def player_stands(self):
+# print "player stands"
+#         print "player final score",
+#         print self.gameObj.player.score
+#         print "dealer score before",
+#         print self.gameObj.dealer.score
         self.gameObj.dealer.play()
 
+        self.newCardNum0 = self.gameObj.dealer.hand[1]
+        self.newCardFace0 = self.findFace(self.newCardNum0)
+        self.newCardPix0 = QtGui.QPixmap(self.newCardFace0)
+        self.dealerCard2.setPixmap(self.newCardPix0)
+        dealerCount = 2
+        notDone = True
+        dealer_cards = len(self.gameObj.dealer.hand)-2
+        if dealer_cards < 2:
+                pass
+        else:
+            while dealer_cards > -1:
 
-        #TODO update dealer card images
+                self.newCardNum1 = self.gameObj.dealer.hand[dealerCount]
+                self.newCardFace1 = self.findFace(self.newCardNum1)
+                self.newCardPix1 = QtGui.QPixmap(self.newCardFace1)
+
+                if dealerCount == 2:
+                    self.dealerCard3.setPixmap(self.newCardPix1)
+                if dealerCount == 3:
+                    self.dealerCard4.setPixmap(self.newCardPix1)
+                if dealerCount == 4:
+                    self.dealerCard5.setPixmap(self.newCardPix1)
+                if dealerCount == 5:
+                    self.dealerCard6.setPixmap(self.newCardPix1)
+                if dealerCount == 6:
+                    self.dealerCard7.setPixmap(self.newCardPix1)
+                if dealerCount == 7:
+                    self.dealerCard8.setPixmap(self.newCardPix1)
+                if dealerCount == 8:
+                    self.dealerCard9.setPixmap(self.newCardPix1)
+                if dealerCount == 9:
+                    self.dealerCard10.setPixmap(self.newCardPix1) 
+                if dealerCount == 10:
+                    self.dealerCard11.setPixmap(self.newCardPix1)
+                dealer_cards -= 1
+
+
+       
+
+        # print "dealer score after",
+        # print self.gameObj.dealer.score
+        ## next 6 lines added ##
+        # if self.gameObj.dealer.score > 21:
+        #     print "player wins"
+        # elif self.gameObj.dealer.score > self.gameObj.player.score:
+        #     print "dealer wins"
+        # else:
+        #     print "player wins"
+
 
 
     def initGameplayWidget(self):
