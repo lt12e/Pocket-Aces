@@ -390,9 +390,9 @@ class Background(QtWidgets.QWidget):
         self.message = QtWidgets.QLabel('New Hand, Hit or Stand?')
         self.dealerLabel = QtWidgets.QLabel('Dealer')
         self.playerLabel = QtWidgets.QLabel('Player')        
-        self.message.setStyleSheet("font: bold; color: white; font-size:16px; background-position: center")
-        self.dealerLabel.setStyleSheet("font: bold; color: white; font-size:12px; background-position: center")
-        self.playerLabel.setStyleSheet("font: bold; color: white; font-size:12px; background-position: center")
+        self.message.setStyleSheet("font: bold; color: white; font-size:20px; background-position: center")
+        self.dealerLabel.setStyleSheet("font: bold; color: white; font-size:16px; background-position: center")
+        self.playerLabel.setStyleSheet("font: bold; color: white; font-size:16px; background-position: center")
 
 
         self.message.setAlignment(Qt.AlignCenter)
@@ -400,21 +400,21 @@ class Background(QtWidgets.QWidget):
         self.dealerLabel.setAlignment(Qt.AlignCenter)
         self.playerLabel.setAlignment(Qt.AlignCenter)
 
-        
         self.moveBox.addWidget(self.dealCards)
         self.moveBox.addWidget(self.hit)
         self.moveBox.addWidget(self.stand)
 
-        self.contentBox.addStretch(.1)
+
+        self.contentBox.addStretch(.5)
         self.contentBox.addWidget(self.dealerLabel)
         self.contentBox.addLayout(self.dealerBox)
-        self.contentBox.addStretch(.1)
+        self.contentBox.addStretch(.5)
         self.contentBox.addWidget(self.playerLabel)        
         self.contentBox.addLayout(self.playerBox)
-        self.contentBox.addStretch(.1)        
+        self.contentBox.addStretch(.5)        
         self.contentBox.addWidget(self.message)
         self.contentBox.addLayout(self.moveBox)
-        self.contentBox.addStretch(.1)
+        self.contentBox.addStretch(.5)
 
 
         self.setLayout(self.contentBox)
