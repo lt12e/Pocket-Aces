@@ -446,29 +446,28 @@ class Background(QtWidgets.QWidget):
 
 
     def set_cards(self):
-        ##TODO see if clear() works instead
-        self.dealerCard1.clear
-        self.dealerCard2.clear
+        self.dealerCard1.clear()
+        self.dealerCard2.clear()
         self.dealerCard3.clear()
-        self.dealerCard4.clear
-        self.dealerCard5.clear
-        self.dealerCard6.clear
+        self.dealerCard4.clear()
+        self.dealerCard5.clear()
+        self.dealerCard6.clear()
         self.dealerCard7.clear()
-        self.dealerCard8.clear
-        self.dealerCard9.clear
-        self.dealerCard10.clear                
+        self.dealerCard8.clear()
+        self.dealerCard9.clear()
+        self.dealerCard10.clear()               
 
-        self.playerCard1.clear
-        self.playerCard2.clear
-        self.playerCard3.clear
-        self.playerCard4.clear
-        self.playerCard5.clear
-        self.playerCard6.clear
-        self.playerCard7.clear
-        self.playerCard8.clear
-        self.playerCard9.clear
-        self.playerCard10.clear
-        self.playerCard11.clear
+        self.playerCard1.clear()
+        self.playerCard2.clear()
+        self.playerCard3.clear()
+        self.playerCard4.clear()
+        self.playerCard5.clear()
+        self.playerCard6.clear()
+        self.playerCard7.clear()
+        self.playerCard8.clear()
+        self.playerCard9.clear()
+        self.playerCard10.clear()
+        self.playerCard11.clear()
 
         self.message.setText("")
 
