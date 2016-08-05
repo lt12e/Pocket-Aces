@@ -16,6 +16,10 @@
 
 import sys#, os
 from PyQt5 import QtWidgets, QtGui, QtCore
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+
 from blackjack import BlackJack
 
 
@@ -228,10 +232,20 @@ class Background(QtWidgets.QWidget):
     def initGameplayWidget(self):
         self.setGameplayWidget()
         self.showGameplayWidget()
-        self.mainLayout.removeLayout(self.vbox)
+        
+        self.hbox.deleteLater()
+        QCoreApplication.sendPostedEvents(self.hbox, QEvent.DeferredDelete)
+
+        newBox = QVBoxLayout()
+        self.testLabel = QtWidgets.QLabel('Hello')
+        self.testLabel.setStyleSheet("font: bold; color: white; font-size:24px; background-position: center")
+        newBox.addWidget(self.testLabel)
+
+        self.setLayout(newBox)
+       # self.mainLayout.removeLayout(self.vbox)
 
     def showGameplayWidget(self):
-        # self.setGameplayWidget()
+        
         pass
         
         
@@ -241,234 +255,9 @@ class Background(QtWidgets.QWidget):
 
 
     def setGameplayWidget(self):
-        self.genericPlayerSlots = [[1,3],[2,3],[1,2],[1,1]]
-        self.dealerSlot = [1,2]
-        self.humanPlayerSlot = [2,3]
-
-
-        #TODO add getHumanPlayer, getDealer, and getGenericPlayers to game classes
-        self.playerWidgetList = []
-
-
-        self.humanPlayerWidget = PlayerWidget(self.gameObj)#init human player
-        self.humanPlayerWidget.setPlayerObj(self.gameObj.getHumanPlayer())
-        self.playerWidgetList.append(self.humanPlayerWidget)
-
-
-        self.dealerPlayerWidget = PlayerWidget(self.gameObj)#init dealer
-        self.dealerPlayerWidget.setPlayerObj(self.gameObj.getDealer())
-        self.playerWidgetList.append(self.dealerPlayerWidget)        
-        self.genericPlayerList = self.gameObj.getGenericPlayers()
-
-
-        for i in range(len(self.genericPlayerList)):    #init generic players
-            self.genericPlayerWidget = PlayerWidget(self.gameObj)
-            self.genericPlayerWidget.setPlayerObj(self.genericPlayerList[i])
-            self.playerWidgetList.append(self.genericPlayerWidget)
-
-        self.gameplayWidget = QtWidgets.QGridLayout()
-        self.middleGameplayWidget = QtWidgets.QVBoxLayout()
-        self.potLayout = BetPotWidget(self)
-        self.potLayout.update
-        super(BetPotWidget,self.potLayout).__init__()
-
-        self.middleGameplayWidget.addWidget(self.potLayout)
-
-        #winningHandRankings text from http://www.thepokerpractice.com/how_to_play/
-        if self.gameMode == 2:  #TODO also pass gameMode and gameObj??
-            self.communityCardsWidget = CommunityCardsWidget
-            #TODO add getCommunityCards() to THE class
-            self.communityCardsWidget.setCommCardsPlayer(self.gameObj.getCommunityCards())
-            self.winningHandRankings =  "Straight Flush - Five cards of the same suit in consecutive order\nFour of a Kind - Four cards of the same value\nFull House - A combination of three of a kind and a pair\nFlush - Any five cards of the same suit\nStraight - Five cards in consecutive order, suit irrelevant\nThree of a Kind - Three cards of the same value\nTwo Pair - Two sets of two cards of the same value\nOne Pair - Two cards of the same value\nHigh Card - The one card with the highest value"
-            self.winningHandRankingsLabel = QtWidgets.QLabel(self.winningHandRankings)
-            self.middleGameplayWidget.addLayout(self.communityCardsWidget)
-            self.middleGameplayWidget.addWidget(self.winningHandRankings)
-
-
-
-        self.gameplayWidget.addWidget(self.humanPlayerWidget,humanPlayerSlot[0],humanPlayerSlot[1]) #insert human player into layout
-        self.gameplayWidget.addWidget(self.dealerPlayerWidget,dealerSlot[0],dealerSlot[1])#insert dealer into layout
-        #insert generic players into layout
-        for i in range(len(self.genericPlayerList)):
-            self.gameplayWidget.addWidget(self.playerWidgetList[i+2],self.genericPlayerSlots[i][0],self.genericPlayerSlots[i][1])
-        self.gameplayWidget.addLayout(middleGameplayWidget,2,2) #insert middleGameplayWidget
-
-        #remove all layouts from background OR just set gameplayWidget as current widget
-        # self.setCentralWidget(self.gameplayWidget)
-        self.setLayout(self.gameplayWidget)
-
-
-class PlayerWidget(QtWidgets.QWidget):
-    def __init__(self,parent):
-        self.playerObj = None
-        self.handCardWidgets = [] #list of cards
-        self.playerNameLabel = QtWidgets.QLabel()
-       # self.currentPlayerIcon = QtWidgets.QLabel.setPixmap(QPixmap("active.jpg"))
-      #  self.setCurrentPlayerIconVisibility(False)
-        self.moneyLeftLabel = QtWidgets.QLabel()
-        self.playerLayout = QtWidgets.QGridLayout()
-        self.playerHeaderLayout = QtWidgets.QHBoxlayout()
-        self.handLayout = QtWidgets.QHBoxlayout()
-
-        ## Set Sub-layouts ##
-        self.playerHeaderLayout.addWidget(self.currentPlayerIcon)
-        self.playerHeaderLayout.addWidget(self.playerNameLabel)
-        for x in self.handCardWidgets:
-            self.handLayout.addWidget(x)
-
-        ## Set Player Layout ##
-        self.playerLayout.addLayout(self.playerHeaderLayout)
-        self.playerLayout.addLayout(self.handLayout)
-        self.playerLayout.addWidget(self.moneyLeftLabel)
-
-    def setPlayerObj(self,player):
-        self.playerObj = player
-        self.update()
-
-    def update(self):
-        ## Update widgets with player info ##
-        self.setPlayerNameLabel()
-        self.updateHand()        
-        self.setMoneyLeftLabel() 
-
-    def setCurrentPlayerIconVisibility(self, b):
-        self.currentPlayerIcon.setVisible(b)
-
-    def setPlayerNameLabel(self,n):
-        self.playerNameLabel.setText(self.playerObj.getName())
-
-    def updateHand(self):
-        i=0
-        for x in self.playerObj.hand:
-            self.handCardWidgets.append(CardWidget())
-            self.handCardWidgets[i].setCard(x)
-            i += 1
-
-    def setCard(self,cnum):
-        self.card.setCard(cnum)
-
-    def setMoneyLeftLabel(self):
-        self.moneyLeftLabel.setText(self.playerObj.getMoney())
-
-
-class CenterWidget(QtWidgets.QWidget):
-    def __init__(self,parent):
-        self.topWidget = CommunityCardsWidget()
-        self.bottomWidget = BetPotWidget()
-        self.topWidget.setCommCardsPlayer()
-        self.topWidget.updateHand()
-        self.centerWidget = QtWidgets.QVBoxLayout()
-        self.addWidget(self.topWidget)
-        self.addWidget(self.bottomWidget)
-
-class CommunityCardsWidget(QtWidgets.QWidget):
-    def __init__(self,parent):
-        self.playerObj = None
-        self.handCardWidgets = [] #list of cards
-
-    def setCommCardsPlayer(self,player):
-        self.playerObj = player
-        self.updateHand()        
-
-    def updateHand(self):
-        i=0
-        for x in self.playerObj.hand:
-            self.handCardWidgets.append(CardWidget())
-            self.handCardWidgets[i].setCard(x)
-            i += 1
-
-    #TODO edit this to take a tuple
-    def setCard(self,cardTuple):
-        self.card.setCard(cardTuple)    
-
-class CurrentBetWidget(QtWidgets.QWidget):
-    def __init__(self,parent):
-        self.currentBet = -1
-        self.currentBetWidget = QtWidgets.QLabel()
-        self.update
-
-    def update(self,event):
-        #TODO implement getCurrentBet in game classes
-        self.currentBet = self.gameObj.getCurrentBet #get current bet from gameplayWidget class
-        self.currentBetWidget.setText('$' + str(self.currentBet))#set current bet amount
-        self.repaint
-
-class PotWidget(QtWidgets.QWidget):
-    def __init__(self,parent):
-        self.currentPotStyle = -1
-        self.currentPot = QtWidgets.QLabel()    #or QtGui.QLabel()?
-        self.update
-
-    def update(self,event):
-        #TODO determine pot amount benchmarks and add to code block
-        #TODO get pot images
-        #TODO add getPot to gameplayWidget class
-        self.currentPot = self.gameObj.getPot()
-        if self.currentPot <= 500:
-            self.currentPotWidget.setPixmap(QPixmap("smpot.jpg"))#set current bet amount
-        elif self.currentPot >500 and self.currentPot <=2000 :
-            self.currentPotWidget.setPixmap(QPixmap("medpot.jpg"))
-        else: # self.currentPot >2000
-            self.currentPotWidget.setPixmap(QPixmap("lgpot.jpg"))                        
-        self.repaint
-
-class BetPotWidget(QtWidgets.QWidget):
-    def __init__(self,parent):
-        self.bpWidget = QtWidgets.QHBoxLayout()
-        self.bWidget = CurrentBetWidget(self)
-        self.pWidget = PotWidget(self)
-        # self.bWidget.parent.__init__()
-        super(CurrentBetWidget,self.bWidget).__init__()
-        super(PotWidget,self.pWidget).__init__()
-
-        self.bpWidget.addWidget(self.bWidget)
-        self.bpWidget.addWidget(self.pWidget)
-
-    def update(self):
-        self.bWidget.update()
-        self.pWidget.update()
-
-class HandWidget(QtWidgets.QWidget):
-    def __init__(self,parent,player):
         pass
 
-class CardWidget(QtWidgets.QWidget):
-    def __init__(self,parent):  
-        self.cardSuit = ""
-        self.cardNumber = ""
-        self.cardBack = QPixmap("CardImgs/back2.jpg")
-        self.cardLabel = QtWidgets.QLabel(cardBack)
-        self.cardLabel.setPixmap()
 
-    def setCard(c): #c = a card tuple
-        self.cardSuit = c[1] #2nd value in card tuple
-        self.cardNumber = c[0] #1st value in card tuple
-
-    def showFront(self,b):
-        if b == True:   #show front of card
-            #TODO get cardNumIndex from gameObj?
-            self.cardNumIndex = -1
-            if self.cardNumber == "Ace":
-                self.cardNumIndex == 12
-            elif self.cardNumber == "King":
-                self.cardNumIndex == 11
-            elif self.cardNumber == "Queen":
-                self.cardNumIndex == 10
-            elif self.cardNumber == "Jack":
-                self.cardNumIndex == 9
-            else:
-                self.cardNumIndex == int(self.cardNumber)
-
-            if self.cardSuit == "Spades":
-                self.cardLabel.setPixmap(self.spadesImgs[cardNumIndex])
-            elif self.cardSuit == "Hearts":
-                self.cardLabel.setPixmap(self.heartsImgs[cardNumIndex])
-            elif self.cardSuit == "Clubs":
-                self.cardLabel.setPixmap(self.clubsImgs[cardNumIndex])
-            else: #self.cardSuit == "Diamonds":
-                self.cardLabel.setPixmap(self.diamondsImgs[cardNumIndex])                                                
-        else:   #show card back
-            self.cardLabel.setPixmap("cardBack.jpg")
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
