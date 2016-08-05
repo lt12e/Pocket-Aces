@@ -449,11 +449,11 @@ class Background(QtWidgets.QWidget):
         ##TODO see if clear() works instead
         self.dealerCard1.clear
         self.dealerCard2.clear
-        self.dealerCard3.clear
+        self.dealerCard3.clear()
         self.dealerCard4.clear
         self.dealerCard5.clear
         self.dealerCard6.clear
-        self.dealerCard7.clear
+        self.dealerCard7.clear()
         self.dealerCard8.clear
         self.dealerCard9.clear
         self.dealerCard10.clear                
@@ -469,6 +469,8 @@ class Background(QtWidgets.QWidget):
         self.playerCard9.clear
         self.playerCard10.clear
         self.playerCard11.clear
+
+        self.message.setText("")
 
         self.cardBack = QPixmap('CardImgs/back2.jpg')
         self.dealerCard1Number = self.gameObj.dealer.hand[0]
