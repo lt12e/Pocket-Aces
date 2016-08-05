@@ -35,12 +35,8 @@ class Dealer:
 	def deal(self, player):
 	#Deals cards to all players
 		for card in range(2):
-			player.giveCard(self.getCard())
-			self.giveCard(self.getCard())
-
-	def getCard(self):
-	#Get card from deck
-		self.deck.getCard()
+			player.giveCard(self.deck.getCard())
+			self.giveCard(self.deck.getCard())
 
 	def giveCard(self, card):
 	#Takes card from deck and gives to hand
@@ -132,3 +128,12 @@ class PlayingCards:
 	def getCard(self):
 	#Pops a card from the deck and returns the card
 		return self.deck.pop()
+
+if __name__ == '__main__':
+	print "Creating a quick game"
+	dealer = Dealer()
+	players = Player()
+	dealer.shuffle()
+	dealer.deal(players)
+	print dealer
+	print players
