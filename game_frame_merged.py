@@ -247,31 +247,20 @@ class Background(QtWidgets.QWidget):
             self.count += 1
 
     def deal_cards(self):
-        print "dealing cards"
-        print "dealer before",
-        print self.gameObj.dealer.hand
-        print "player before",
-        print self.gameObj.player.hand
+
         self.gameObj.dealer.shuffle()
         self.gameObj.dealer.deal(self.gameObj.player)
         self.set_cards()
         self.count = 2
-        print "dealer after",
-        print self.gameObj.dealer.hand
-        print "player after",
-        print self.gameObj.player.hand
+
         
 
     def player_hits(self):
-        print "player hits"
-        print "player score before",
-        print self.gameObj.player.score
+
         self.gameObj.dealer.hit(self.gameObj.player)
-        print "player score after",
-        print self.gameObj.player.score
+
         ## next 3 lines added ##
         if self.gameObj.player.score > 21:
-            print "dealer wins"
             self.dealCards
 
     def player_stands(self):
@@ -503,10 +492,10 @@ class Background(QtWidgets.QWidget):
 
     def findFace(self,n): #n = cardnum tuple
         self.cardNumIndex = -1
-        self.spadesImgs = ['2_of_spades.png', '3_of_spades.png', '4_of_spades.png', '5_of_spades.png', '6_of_spades.png', '7_of_spades.png', '8_of_spades.png', '9_of_spades.png', '10_of_spades.png', "jack_of_spades2", "queen_of_spades2", "king_of_spades2", "ace_of_spades2"]
-        self.heartsImgs = ['2_of_hearts.png', '3_of_hearts.png', '4_of_hearts.png', '5_of_hearts.png', '6_of_hearts.png', '7_of_hearts.png', '8_of_hearts.png', '9_of_hearts.png', '10_of_hearts.png', "jack_of_hearts2", "queen_of_hearts2", "king_of_hearts2", "ace_of_hearts2"]
-        self.clubsImgs = ['2_of_clubs.png', '3_of_clubs.png', '4_of_clubs.png', '5_of_clubs.png', '6_of_clubs.png', '7_of_clubs.png', '8_of_clubs.png', '9_of_clubs.png', '10_of_clubs.png', "jack_of_clubs2", "queen_of_clubs2", "king_of_clubs2", "ace_of_clubs2"]
-        self.diamondsImgs = ['2_of_diamonds.png', '3_of_diamonds.png', '4_of_diamondsades.png', '5_of_diamonds.png', '6_of_diamonds.png', '7_of_diamonds.png', '8_of_diamonds.png', '9_of_diamonds.png', '10_of_diamonds.png', "jack_of_diamonds2", "queen_of_diamonds2", "king_of_diamonds2", "ace_of_diamonds2"]
+        self.spadesImgs = ['2_of_spades.png', '3_of_spades.png', '4_of_spades.png', '5_of_spades.png', '6_of_spades.png', '7_of_spades.png', '8_of_spades.png', '9_of_spades.png', '10_of_spades.png', "jack_of_spades2", "queen_of_spades2", "king_of_spades2", "ace_of_spades"]
+        self.heartsImgs = ['2_of_hearts.png', '3_of_hearts.png', '4_of_hearts.png', '5_of_hearts.png', '6_of_hearts.png', '7_of_hearts.png', '8_of_hearts.png', '9_of_hearts.png', '10_of_hearts.png', "jack_of_hearts2", "queen_of_hearts2", "king_of_hearts2", "ace_of_hearts"]
+        self.clubsImgs = ['2_of_clubs.png', '3_of_clubs.png', '4_of_clubs.png', '5_of_clubs.png', '6_of_clubs.png', '7_of_clubs.png', '8_of_clubs.png', '9_of_clubs.png', '10_of_clubs.png', "jack_of_clubs2", "queen_of_clubs2", "king_of_clubs2", "ace_of_clubs"]
+        self.diamondsImgs = ['2_of_diamonds.png', '3_of_diamonds.png', '4_of_diamonds.png', '5_of_diamonds.png', '6_of_diamonds.png', '7_of_diamonds.png', '8_of_diamonds.png', '9_of_diamonds.png', '10_of_diamonds.png', "jack_of_diamonds2", "queen_of_diamonds2", "king_of_diamonds2", "ace_of_diamonds"]
 
         self.cardNumIndex = n[0] - 2
 
