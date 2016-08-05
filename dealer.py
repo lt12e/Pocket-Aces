@@ -35,6 +35,8 @@ class Dealer:
 
 	def deal(self, player):
 	#Deals cards to all players
+		del self.hand[:]
+		del player.hand[:]
 		self.score = 0
 		player.score = 0
 		for card in range(2):
@@ -117,8 +119,7 @@ class PlayingCards:
 	#Initializes the deck
 	#Deletes the current deck if necessary
 	#Creates a new deck and returns it
-		for card in self.deck:
-			del card
+		del self.deck[:]
 		for i in range(4):
 			for k in range(13):
 				card = (self.number[k], self.suit[i])
