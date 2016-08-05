@@ -38,6 +38,8 @@ class Dealer:
 	#Deals cards to all players
 		del self.hand[:]
 		del player.hand[:]
+		del self.aces[:]
+		del player.aces[:]
 		self.score = 0
 		player.score = 0
 		for card in range(2):
