@@ -246,6 +246,9 @@ class Background(QtWidgets.QWidget):
         self.gameObj.dealer.hit(self.gameObj.player)
         print "player score after",
         print self.gameObj.player.score
+        if self.gameObj.player.score > 21:
+            print "dealer wins"
+            self.deal_cards
 
     def player_stands(self):
         print "player stands"
@@ -256,6 +259,12 @@ class Background(QtWidgets.QWidget):
         self.gameObj.dealer.play()
         print "dealer score after",
         print self.gameObj.dealer.score
+        if self.gameObj.dealer.score > 21:
+            print "player wins"
+        elif self.gameObj.dealer.score > self.gameObj.player.score:
+            print "dealer wins"
+        else:
+            print "player wins"
 
     def initGameplayWidget(self):
         self.setGameplayWidget()
