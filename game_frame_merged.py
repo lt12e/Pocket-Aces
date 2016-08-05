@@ -4,7 +4,6 @@
 ## redseamless.jpg from http://www.myfreetextures.com/wp-content/uploads/2014/10/seamless-wood3.jpg
 ## green-gradient.jpg from http://www.technocrazed.com/wp-content/uploads/2015/12/Green-Wallpaper-1.jpg
 ## jungle-green-grunge-texture.jpg from http://www.texturecrate.com/texture/jungle-green-grunge/
-## active.jpg from TODO-Still need this img
 ## logo.jpg by Jeffrey Campbell
 
 ##back2.jpg from http://www.leeasher.com/store/playing_cards/tally_ho_red.html
@@ -260,25 +259,12 @@ class Background(QtWidgets.QWidget):
         self.gameObj.dealer.hit(self.gameObj.player)
 
         ## next 3 lines added ##
-        if self.gameObj.player.score > 21:
+        if self.gameObj.player.score >= 21:
             self.dealCards
 
     def player_stands(self):
-        print "player stands"
-        print "player final score",
-        print self.gameObj.player.score
-        print "dealer score before",
-        print self.gameObj.dealer.score
         self.gameObj.dealer.play()
-        print "dealer score after",
-        print self.gameObj.dealer.score
-        ## next 6 lines added ##
-        if self.gameObj.dealer.score > 21:
-            print "player wins"
-        elif self.gameObj.dealer.score > self.gameObj.player.score:
-            print "dealer wins"
-        else:
-            print "player wins"
+
 
         #TODO update dealer card images
 
