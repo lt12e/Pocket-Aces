@@ -117,6 +117,16 @@ class PlayingCards:
 		self.deck = []
 		self.initialize()
 
+	def __str__(self):
+	#Defines print to print out the current HAND
+	#Removes extra characters ex. []()',
+		print len(self.deck)
+		after = ""
+		for i in self.deck:
+			after += str(i)
+			#after += "\n"
+		return after
+
 	def initialize(self):
 	#Initializes the deck
 	#Deletes the current deck if necessary
@@ -138,10 +148,11 @@ class PlayingCards:
 	#Pops a card from the deck and returns the card
 		return self.deck.pop()
 
-"""if __name__ == '__main__':
+if __name__ == '__main__':
 	print "Creating a quick game"
 	dealer = Dealer()
-	players = Player()
+	print dealer.deck
+	"""players = Player()
 	dealer.shuffle()
 	dealer.deal(players)
 	print dealer
