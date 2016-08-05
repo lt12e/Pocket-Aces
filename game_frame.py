@@ -233,16 +233,35 @@ class Background(QtWidgets.QWidget):
         self.setGameplayWidget()
         self.showGameplayWidget()
         
+        #remove beginning menu layout 
         self.hbox.deleteLater()
         QCoreApplication.sendPostedEvents(self.hbox, QEvent.DeferredDelete)
 
-        newBox = QVBoxLayout()
-        self.testLabel = QtWidgets.QLabel('Hello')
-        self.testLabel.setStyleSheet("font: bold; color: white; font-size:24px; background-position: center")
-        newBox.addWidget(self.testLabel)
+        self.dealCards = QtWidgets.QPushButton('Deal')
+        #self.dealCards.clicked.connect()
+        self.dealCards.setFixedWidth(80)
 
+        self.hit = QtWidgets.QPushButton('Hit')
+        #self.hit.clicked.connect()
+        self.hit.setFixedWidth(80)
+
+        self.stand = QtWidgets.QPushButton('Stand')
+        #self.stand.clicked.connect()
+        self.stand.setFixedWidth(80)
+
+        #gameplay layout
+        newBox = QHBoxLayout()
+        #self.testLabel = QtWidgets.QLabel('Hello')
+        #self.testLabel.setStyleSheet("font: bold; color: white; font-size:24px; background-position: center")
+        
+        newBox.addWidget(self.dealCards)
+        newBox.addWidget(self.hit)
+        newBox.addWidget(self.stand)
         self.setLayout(newBox)
-       # self.mainLayout.removeLayout(self.vbox)
+
+
+
+
 
     def showGameplayWidget(self):
         

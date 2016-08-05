@@ -1,6 +1,6 @@
 #Dealer class
 
-from PlayingCards import PlayingCards
+from playingcards import PlayingCards
 
 class Dealer:
 	'Poker Dealer class'
@@ -28,7 +28,7 @@ class Dealer:
 			after += "\n"
 		return after
 
-	def deal(self, players, game="five"):
+	def deal(self, players, game="blackjack"):
 	#Deals cards to all players
 	#Defaulted to five cards each for five card draw
 	#game can be set to "texas" for two cards each
