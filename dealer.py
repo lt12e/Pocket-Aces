@@ -17,6 +17,7 @@ class Dealer:
 	#Initializes a list for dealer's hand
 	#Initializes the deck from PlayingCards class
 		self.hand = []
+		self.aces = []
 		self.deck = PlayingCards()
 		self.score = 0
 
@@ -71,7 +72,8 @@ class Dealer:
 				score += temp
 			if score > 21:
 				for i in range(0, len(self.hand)-1):
-					if self.hand[i][0] == 14:
+					if self.hand[i][0] == 14 and i not in self.aces:
+						self.aces.append(i)
 						score -= 10
 						break
 		self.score = score
@@ -98,7 +100,8 @@ class Dealer:
 		player.score += score
 		if player.score > 21:
 			for i in range(0,len(player.hand)-1):
-				if player.hand[i][0] == 14:
+				if player.hand[i][0] == 14 and i not in player.aces:
+					player.aces.append(i)
 					player.score -= 10
 					break
 
@@ -111,6 +114,7 @@ class Player(Dealer):
 	#All functions with the hand are inherited
 		self.hand = []
 		self.score = 0
+		self.aces = []
 
 	def get_score(self):
 		self.score = self.getValue(self.hand[0][0]) + self.getValue(self.hand[1][0])
