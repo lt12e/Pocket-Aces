@@ -242,8 +242,8 @@ class Background(QtWidgets.QWidget):
                 self.message.setText("Player has Bust! You Lose!")
             if self.gameObj.player.score == 21:
                 self.message.setText("Player hits 21! You Win!")
-
-            self.count += 1
+            else:
+                self.count += 1
 
     def deal_cards(self):
 
@@ -251,16 +251,6 @@ class Background(QtWidgets.QWidget):
         self.gameObj.dealer.deal(self.gameObj.player)
         self.set_cards()
         self.count = 2
-
-        
-
-    def player_hits(self):
-
-        self.gameObj.dealer.hit(self.gameObj.player)
-
-        ## next 3 lines added ##
-        if self.gameObj.player.score >= 21:
-            self.dealCards
 
     def player_stands(self):
         self.gameObj.dealer.play()
