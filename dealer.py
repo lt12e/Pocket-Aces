@@ -18,6 +18,7 @@ class Dealer:
 	#Initializes the deck from PlayingCards class
 		self.hand = []
 		self.deck = PlayingCards()
+		self.score = 0
 
 	def __str__(self):
 	#Defines print to print out the current HAND
@@ -34,9 +35,12 @@ class Dealer:
 
 	def deal(self, player):
 	#Deals cards to all players
+		self.score = 0
+		player.score = 0
 		for card in range(2):
 			player.giveCard(self.deck.getCard())
 			self.giveCard(self.deck.getCard())
+		player.get_score()
 
 	def giveCard(self, card):
 	#Takes card from deck and gives to hand
@@ -63,7 +67,7 @@ class Dealer:
 				score += 1
 			else:
 				score += temp
-		return score
+		self.score = score
 
 	def getValue(self, number):
 		if number == 14:
@@ -75,8 +79,6 @@ class Dealer:
 
 	def hit(self, player):
 		score = 0
-		if len(player.hand) == 2:
-			score = self.getValue(player.hand[0][0]) + self.getValue(player.hand[1][0])
 		card = self.deck.getCard()
 		player.giveCard(card)
 		temp = self.getValue(card[0])
@@ -84,7 +86,7 @@ class Dealer:
 			score += 1
 		else:
 			score += temp
-		return score
+		player.score += score
 
 
 class Player(Dealer):
@@ -94,6 +96,10 @@ class Player(Dealer):
 	#The player has a hand, but not their own deck
 	#All functions with the hand are inherited
 		self.hand = []
+		self.score = 0
+
+	def get_score(self):
+		self.score = self.getValue(self.hand[0][0]) + self.getValue(self.hand[1][0])
 
 class PlayingCards:
 	'Deck of cards class'
@@ -129,11 +135,11 @@ class PlayingCards:
 	#Pops a card from the deck and returns the card
 		return self.deck.pop()
 
-if __name__ == '__main__':
+"""if __name__ == '__main__':
 	print "Creating a quick game"
 	dealer = Dealer()
 	players = Player()
 	dealer.shuffle()
 	dealer.deal(players)
 	print dealer
-	print players
+	print players"""
