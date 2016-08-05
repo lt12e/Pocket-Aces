@@ -4,7 +4,6 @@ import random
 
 class BlackJack:
     def __init__(self):
-        self.numPlayers = nplayers  
         #player1 = Dealer, player2 = dealer, players3-6 = computer        
         self.dealer = Dealer()
         self.player = Player()
