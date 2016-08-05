@@ -56,7 +56,7 @@ class Dealer:
 	def play(self):
 		score = self.getValue(self.hand[0][0]) + self.getValue(self.hand[1][0])
 		while score < 17:
-			card = self.getCard()
+			card = self.deck.getCard()
 			self.giveCard(card)
 			temp = self.getValue(card[0])
 			if temp == 11 and score > 10:
@@ -77,7 +77,7 @@ class Dealer:
 		score = 0
 		if len(player.hand) == 2:
 			score = self.getValue(player.hand[0][0]) + self.getValue(player.hand[1][0])
-		card = self.getCard()
+		card = self.deck.getCard()
 		player.giveCard(card)
 		temp = self.getValue(card[0])
 		if temp == 11 and score > 10:
