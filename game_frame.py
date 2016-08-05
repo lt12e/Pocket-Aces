@@ -14,7 +14,7 @@
 ## back.png from http://becuo.com/cool-playing-cards-back
 
 
-import sys#, os
+import sys
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -37,7 +37,7 @@ class MainWindow(QtWidgets.QMainWindow):
         ## Menu Options ##
         menuBar = self.menuBar().addMenu('File')
         self.newGameOption = menuBar.addAction('New Game')
-        self.newGameOption.triggered.connect(self.mainLayout.newGame)
+        self.newGameOption.triggered.connect(self.mainLayout.initGame)
         self.loadGameOption = menuBar.addAction('Load Game')
         self.loadGameOption.triggered.connect(self.mainLayout.loadGame)
         self.loadGameOption.setVisible(False)
@@ -58,15 +58,6 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             self.mainLayout.tStyle = self.mainLayout.changeTableStyle(2)
             self.mainLayout.repaint()
-
-    ## closeEvent from peg_game.py example code ##
-    # def closeEvent(self,event):
-    #     popup = QuitPopup()
-    #     reply = popup.exec_()
-    #     if reply == QtWidgets.QMessageBox.Yes:
-    #         event.accept()
-    #     else:
-    #         event.ignore()
 
 ## App Background Layout (level 1) ##
 class Background(QtWidgets.QWidget):
@@ -219,7 +210,7 @@ class Background(QtWidgets.QWidget):
         self.gameObj = None
         #TODO change to fit blackjack and THE classes
         if self.gameMode == 1:
-            self.gameObj = BlackJack()  # 2 = numPlayers  
+            self.gameObj = BlackJack()  #
             self.initGameplayWidget()
         else: #gameMode == 2
             self.gameObj = TexasHoldEm()
@@ -230,10 +221,12 @@ class Background(QtWidgets.QWidget):
     def initGameplayWidget(self):
         self.setGameplayWidget()
         self.showGameplayWidget()
+        self.contentBox = None
         
         #remove beginning menu layout 
-        self.hbox.deleteLater()
-        QCoreApplication.sendPostedEvents(self.hbox, QEvent.DeferredDelete)
+        if self.hbox:
+            self.hbox.deleteLater()
+            QCoreApplication.sendPostedEvents(self.hbox, QEvent.DeferredDelete)
 
         self.dealCards = QtWidgets.QPushButton('Deal')
         #self.dealCards.clicked.connect()
@@ -251,10 +244,8 @@ class Background(QtWidgets.QWidget):
         dealerBox = QHBoxLayout()
         playerBox = QHBoxLayout()
         moveBox = QHBoxLayout()
-        contentBox = QVBoxLayout()
 
-
-
+        self.contentBox = QVBoxLayout()
 
 
         ## Set card images ##
@@ -291,14 +282,17 @@ class Background(QtWidgets.QWidget):
         moveBox.addWidget(self.hit)
         moveBox.addWidget(self.stand)
 
-        contentBox.addLayout(dealerBox)
-        contentBox.addLayout(playerBox)
-        contentBox.addLayout(moveBox)
+        self.contentBox.addLayout(dealerBox)
+        self.contentBox.addLayout(playerBox)
+        self.contentBox.addLayout(moveBox)
 
-        self.setLayout(contentBox)
-        
+        try:
+            self.setLayout(self.contentBox)
+        except:
+            self.contentBox.deleteLater()
+            QCoreApplication.sendPostedEvents(self.contentBox, QEvent.DeferredDelete)
 
-
+            print self.contentBox
 
     def findFace(self,n): #n = cardnum tuple
         self.cardNumIndex = -1
@@ -308,8 +302,6 @@ class Background(QtWidgets.QWidget):
         self.diamondsImgs = ['2_of_diamonds.png', '3_of_diamonds.png', '4_of_diamondsades.png', '5_of_diamonds.png', '6_of_diamonds.png', '7_of_diamonds.png', '8_of_diamonds.png', '9_of_diamonds.png', '10_of_diamonds.png', "jack_of_diamonds2", "queen_of_diamonds2", "king_of_diamonds2", "ace_of_diamonds2"]
 
         self.cardNumIndex = n[0] - 2
-        print n
-        print self.cardNumIndex
 
         if n[1] == "Spades":
             self.cardFaceFile = self.spadesImgs[self.cardNumIndex]
@@ -327,58 +319,10 @@ class Background(QtWidgets.QWidget):
         
         pass
         
-        
-        
-
-        
 
 
     def setGameplayWidget(self):
         pass
-
-    # class CardWidget(QtWidgets.QWidget):
-    #     # def __init__(self,parent=None): 
-    #         # QtWidgets.QWidget.__init__(self, parent)
-    #     def __init__(self):
-    #         # super(QtWidgets.QWidget).__init__()
-    #         QtWidgets.QWidget.__init__(self, parent)
-
-    #         self.cardSuit = ""
-    #         self.cardNumber = ""
-    #         self.cardBack = QPixmap('CardImgs/back2.jpg')
-    #         self.cardLabel = QtWidgets.QLabel()
-    #         self.cardLabel.setPixmap(self.cardBack)
-    #         self.cardLabel.show()
-
-    #     def setCard(c): #c = a card tuple
-    #         self.cardSuit = c[1] #2nd value in card tuple
-    #         self.cardNumber = c[0] #1st value in card tuple
-
-    #     def showFront(self,b):
-    #         if b == True:   #show front of card
-    #             #TODO get cardNumIndex from gameObj?
-    #             self.cardNumIndex = -1
-    #             if self.cardNumber == "Ace":
-    #                 self.cardNumIndex == 12
-    #             elif self.cardNumber == "King":
-    #                 self.cardNumIndex == 11
-    #             elif self.cardNumber == "Queen":
-    #                 self.cardNumIndex == 10
-    #             elif self.cardNumber == "Jack":
-    #                 self.cardNumIndex == 9
-    #             else:
-    #                 self.cardNumIndex == int(self.cardNumber)
-
-    #             if self.cardSuit == "Spades":
-    #                 self.cardLabel.setPixmap(self.spadesImgs[cardNumIndex])
-    #             elif self.cardSuit == "Hearts":
-    #                 self.cardLabel.setPixmap(self.heartsImgs[cardNumIndex])
-    #             elif self.cardSuit == "Clubs":
-    #                 self.cardLabel.setPixmap(self.clubsImgs[cardNumIndex])
-    #             else: #self.cardSuit == "Diamonds":
-    #                 self.cardLabel.setPixmap(self.diamondsImgs[cardNumIndex])                                                
-    #         else:   #show card back
-    #             self.cardLabel.setPixmap("cardBack.jpg")
 
 
 
