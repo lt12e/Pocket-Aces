@@ -6,6 +6,8 @@ from dealer import Dealer, Player
 class BlackJack:
     def __init__(self, nplayers):
         self.numPlayers = nplayers  
+        self.currentBet = 0
+        self.currentPot = 0
         #player1 = Dealer, player2 = dealer, players3-6 = computer        
         self.players = []
         self.dealer = Dealer()
@@ -80,6 +82,17 @@ class BlackJack:
 
         return self.total
 
+    def getHumanPlayer(self):
+        return self.players[1]
 
+    def getDealer(self):
+        return self.players[0]
+
+    def getGenericPlayers(self):
+        self.genPlayers = []
+        for x in range(2,len(self.players)):
+            self.genPlayers.append(self.players[x])
+
+        return self.genPlayers
 
     #Surrender option can be added but IS NOT NECESSARY
