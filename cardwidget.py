@@ -31,12 +31,12 @@ class CardWidget(QtWidgets.QWidget):
                 self.cardNumIndex == int(self.cardNumber)
 
             if self.cardSuit == "Spades":
-                self.cardLabel.setPixmap(self.spadesImgs[cardNumIndex])
+                self.cardLabel.setPixmap("CardImgs/" + self.spadesImgs[cardNumIndex])
             elif self.cardSuit == "Hearts":
-                self.cardLabel.setPixmap(self.heartsImgs[cardNumIndex])
+                self.cardLabel.setPixmap("CardImgs/" + self.heartsImgs[cardNumIndex])
             elif self.cardSuit == "Clubs":
-                self.cardLabel.setPixmap(self.clubsImgs[cardNumIndex])
+                self.cardLabel.setPixmap("CardImgs/" + self.clubsImgs[cardNumIndex])
             else: #self.cardSuit == "Diamonds":
-                self.cardLabel.setPixmap(self.diamondsImgs[cardNumIndex])                                                
+                self.cardLabel.setPixmap("CardImgs/" + self.diamondsImgs[cardNumIndex])                                                
         else:   #show card back
             self.cardLabel.setPixmap("cardBack.jpg")
