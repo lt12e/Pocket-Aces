@@ -80,14 +80,16 @@ class Dealer:
 			return number
 
 	def hit(self, player):
+		if player.score >= 21:
+			return
 		score = 0
 		card = self.deck.getCard()
 		player.giveCard(card)
 		temp = self.getValue(card[0])
-		if temp == 11 and score > 10:
-			score += 1
+		if temp == 11 and player.score > 10:
+			score = 1
 		else:
-			score += temp
+			score = temp
 		player.score += score
 
 
