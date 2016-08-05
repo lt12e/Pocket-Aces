@@ -69,6 +69,11 @@ class Dealer:
 				score += 1
 			else:
 				score += temp
+			if score > 21:
+			for i in len(self.hand)-1:
+				if self.hand[i][0] == 14:
+					score -= 10
+					break
 		self.score = score
 
 	def getValue(self, number):
@@ -91,6 +96,11 @@ class Dealer:
 		else:
 			score = temp
 		player.score += score
+		if player.score > 21:
+			for i in len(player.hand)-1:
+				if player.hand[i][0] == 14:
+					player.score -= 10
+					break
 
 
 class Player(Dealer):
