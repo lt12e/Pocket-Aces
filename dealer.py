@@ -3,21 +3,13 @@
 import random
 
 class BlackJack:
-    def __init__(self, nplayers):
+    def __init__(self):
         self.numPlayers = nplayers  
         #player1 = Dealer, player2 = dealer, players3-6 = computer        
-        self.players = []
         self.dealer = Dealer()
         self.player = Player()
-        self.players.append(self.dealer)
-        self.players.append(self.player)
-        if nplayers > 1:
-            for i in range(self.numPlayers-1):
-                self.comp = Player()
-                self.players.append(self.comp)
-
         self.dealer.shuffle()
-        self.dealer.deal(self.players)
+        self.dealer.deal(self.player)
 
 class Dealer:
 	'Blackjack Dealer class'
@@ -28,11 +20,23 @@ class Dealer:
 		self.hand = []
 		self.deck = PlayingCards()
 
-	def deal(self, players):
+	def __str__(self):
+	#Defines print to print out the current HAND
+	#Removes extra characters ex. []()',
+		after = ""
+		formatting = "[]()',"
+		for i in self.hand:
+			before = str(i)
+			for i in range(len(before)):
+				if before[i] not in formatting:
+					after += before[i]
+			after += "\n"
+		return after
+
+	def deal(self, player):
 	#Deals cards to all players
 		for card in range(2):
-			for player in players:
-				player.giveCard(self.getCard())
+			player.giveCard(self.getCard())
 			self.giveCard(self.getCard())
 
 	def getCard(self):
