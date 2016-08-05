@@ -227,6 +227,17 @@ class Background(QtWidgets.QWidget):
                 self.playerCard5.setPixmap(self.newCardPix)
             if self.count == 5:
                 self.playerCard6.setPixmap(self.newCardPix)
+            if self.count == 6:
+                self.playerCard7.setPixmap(self.newCardPix)
+            if self.count == 7:
+                self.playerCard8.setPixmap(self.newCardPix)
+            if self.count == 8:
+                self.playerCard9.setPixmap(self.newCardPix)
+            if self.count == 9:
+                self.playerCard10.setPixmap(self.newCardPix) 
+            if self.count == 10:
+                self.playerCard11.setPixmap(self.newCardPix)                                
+
 
             if self.gameObj.player.score > 21:
                 self.message.setText("Player has Bust! You Lose!")
@@ -279,6 +290,8 @@ class Background(QtWidgets.QWidget):
             print "dealer wins"
         else:
             print "player wins"
+
+        #TODO update dealer card images
 
 
     def initGameplayWidget(self):
