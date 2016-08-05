@@ -14,7 +14,7 @@
 ## back.png from http://becuo.com/cool-playing-cards-back
 
 
-import sys
+import sys#, os
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -37,7 +37,7 @@ class MainWindow(QtWidgets.QMainWindow):
         ## Menu Options ##
         menuBar = self.menuBar().addMenu('File')
         self.newGameOption = menuBar.addAction('New Game')
-        self.newGameOption.triggered.connect(self.mainLayout.initGame)
+        self.newGameOption.triggered.connect(self.mainLayout.newGame)
         self.loadGameOption = menuBar.addAction('Load Game')
         self.loadGameOption.triggered.connect(self.mainLayout.loadGame)
         self.loadGameOption.setVisible(False)
@@ -58,6 +58,15 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             self.mainLayout.tStyle = self.mainLayout.changeTableStyle(2)
             self.mainLayout.repaint()
+
+    ## closeEvent from peg_game.py example code ##
+    # def closeEvent(self,event):
+    #     popup = QuitPopup()
+    #     reply = popup.exec_()
+    #     if reply == QtWidgets.QMessageBox.Yes:
+    #         event.accept()
+    #     else:
+    #         event.ignore()
 
 ## App Background Layout (level 1) ##
 class Background(QtWidgets.QWidget):
@@ -130,7 +139,7 @@ class Background(QtWidgets.QWidget):
         self.playersLabel.setStyleSheet("font: bold; color: white; font-size:24px; background-position: center")
         self.playersLabel.setVisible(False)
         self.playersCombo = QtWidgets.QComboBox()
-        self.playersCombo.addItems(['1'])   #,'2','3','4'
+        self.playersCombo.addItems(['1','2','3','4'])
         self.playersCombo.setVisible(False)
         self.playersComboOk = QtWidgets.QPushButton('OK')
         self.playersComboOk.clicked.connect(self.getNumPlayers)
@@ -210,26 +219,42 @@ class Background(QtWidgets.QWidget):
         self.gameObj = None
         #TODO change to fit blackjack and THE classes
         if self.gameMode == 1:
-            self.gameObj = BlackJack()  #
+            self.gameObj = BlackJack()  
             self.initGameplayWidget()
         else: #gameMode == 2
             self.gameObj = TexasHoldEm()
             gameObj.setNumPlayers(self.numPlayers+2) 
             self.initGameplayWidget()
 
+    def hit_game(self):
+        if self.gameObj.player > 21:
+            pass
+        else:
+            self.gameObj.dealer.hit(self.gameObj.player)
+            self.newCardNum = self.gameObj.player.hand[self.count]
+            self.newCardFace = self.findFace(self.newCardNum)
+            self.newCardPix = QtGui.QPixmap(self.newCardFace)
+            self.playerCard3.setPixmap(self.newCardPix)
 
-    def initGameplayWidget(self):  
+            self.count += 1
+
+
+
+    def initGameplayWidget(self):
+        self.setGameplayWidget()
+        self.showGameplayWidget()
+        self.count = 2
+        
         #remove beginning menu layout 
-        if self.hbox:
-            self.hbox.deleteLater()
-            QCoreApplication.sendPostedEvents(self.hbox, QEvent.DeferredDelete)
+        self.hbox.deleteLater()
+        QCoreApplication.sendPostedEvents(self.hbox, QEvent.DeferredDelete)
 
         self.dealCards = QtWidgets.QPushButton('Deal')
         #self.dealCards.clicked.connect()
         self.dealCards.setFixedWidth(80)
 
         self.hit = QtWidgets.QPushButton('Hit')
-        #self.hit.clicked.connect()
+        self.hit.clicked.connect(self.hit_game)
         self.hit.setFixedWidth(80)
 
         self.stand = QtWidgets.QPushButton('Stand')
@@ -237,11 +262,11 @@ class Background(QtWidgets.QWidget):
         self.stand.setFixedWidth(80)
 
         #gameplay layout
-        dealerBox = QHBoxLayout()
-        playerBox = QHBoxLayout()
-        moveBox = QHBoxLayout()
-
+        self.dealerBox = QHBoxLayout()
+        self.playerBox = QHBoxLayout()
+        self.moveBox = QHBoxLayout()
         self.contentBox = QVBoxLayout()
+
 
 
         ## Set card images ##
@@ -256,39 +281,94 @@ class Background(QtWidgets.QWidget):
         self.pCard1QPix = QtGui.QPixmap(self.playerCard1Face)
         self.pCard2QPix = QtGui.QPixmap(self.playerCard2Face)
 
-        dealerCard1 = QtWidgets.QLabel()
-        dealerCard2 = QtWidgets.QLabel()
 
-        playerCard1 = QtWidgets.QLabel()
-        playerCard2 = QtWidgets.QLabel()
-
-        dealerCard1.setPixmap(self.dCard1QPix)
-        dealerCard2.setPixmap(self.cardBack)
-        playerCard1.setPixmap(self.pCard1QPix)
-        playerCard2.setPixmap(self.pCard2QPix)
+        self.dealerBox.addStretch(.5)
+        self.playerBox.addStretch(.5)
 
 
-        dealerBox.addWidget(dealerCard1)
-        dealerBox.addWidget(dealerCard2)
+        self.cardBack = QPixmap('CardImgs/back2.jpg')
+            # self.cardLabel.setPixmap(self.cardBack)
 
-        playerBox.addWidget(playerCard1)
-        playerBox.addWidget(playerCard2)
+
+        self.dealerCard1 = QtWidgets.QLabel()
+        self.dealerCard2 = QtWidgets.QLabel()
+
+        self.playerCard1 = QtWidgets.QLabel()
+        self.playerCard2 = QtWidgets.QLabel()
+        self.playerCard3 = QtWidgets.QLabel()
+        self.playerCard4 = QtWidgets.QLabel()
+        self.playerCard5 = QtWidgets.QLabel()
+        self.playerCard6 = QtWidgets.QLabel()
+
+
+        self.dealerCard1.setPixmap(self.dCard1QPix)
+        self.dealerCard2.setPixmap(self.cardBack)
+        self.playerCard1.setPixmap(self.pCard1QPix)
+        self.playerCard2.setPixmap(self.pCard2QPix)
+
+        self.dealerCard1.setScaledContents(True)
+        self.dealerCard1.setMaximumSize(75,125)
+
+        self.dealerCard2.setScaledContents(True)
+        self.dealerCard2.setMaximumSize(75,125)
+
+        self.playerCard1.setScaledContents(True)
+        self.playerCard1.setMaximumSize(75,125)
+
+        self.playerCard2.setScaledContents(True)
+        self.playerCard2.setMaximumSize(75,125)
+
+        self.playerCard3.setScaledContents(True)
+        self.playerCard3.setMaximumSize(75,125)
+
+        self.playerCard4.setScaledContents(True)
+        self.playerCard4.setMaximumSize(75,125)
+
+        self.playerCard5.setScaledContents(True)
+        self.playerCard5.setMaximumSize(75,125)
+
+        self.playerCard6.setScaledContents(True)
+        self.playerCard6.setMaximumSize(75,125)
+
+        self.dealerBox.addWidget(self.dealerCard1)
+        self.dealerBox.addWidget(self.dealerCard2)
+
+        self.playerBox.addWidget(self.playerCard1)
+        self.playerBox.addWidget(self.playerCard2)
+        self.playerBox.addWidget(self.playerCard3)
+        self.playerBox.addWidget(self.playerCard4)
+        self.playerBox.addWidget(self.playerCard5)
+        self.playerBox.addWidget(self.playerCard6)
+
+        self.dealerBox.addStretch(.5)
+        self.playerBox.addStretch(.5)
+
+        self.message = QtWidgets.QLabel('New Hand, Hit or Stand?')
+        self.message.setStyleSheet("font: bold; color: white; font-size:16px; background-position: center")
         
-        moveBox.addWidget(self.dealCards)
-        moveBox.addWidget(self.hit)
-        moveBox.addWidget(self.stand)
+        self.message.setAlignment(Qt.AlignCenter)
+        self.message.setMargin(0)
 
-        self.contentBox.addLayout(dealerBox)
-        self.contentBox.addLayout(playerBox)
-        self.contentBox.addLayout(moveBox)
 
-        try:
-            self.setLayout(self.contentBox)
-        except:
-            self.contentBox.deleteLater()
-            QCoreApplication.sendPostedEvents(self.contentBox, QEvent.DeferredDelete)
 
-            print self.contentBox
+
+        #self.testLabel = QtWidgets.QLabel('Hello')
+        #self.testLabel.setStyleSheet("font: bold; color: white; font-size:24px; background-position: center")
+        
+        self.moveBox.addWidget(self.dealCards)
+        self.moveBox.addWidget(self.hit)
+        self.moveBox.addWidget(self.stand)
+
+        self.contentBox.addLayout(self.dealerBox)
+        self.contentBox.addLayout(self.playerBox)
+        self.contentBox.addWidget(self.message)
+        self.contentBox.addLayout(self.moveBox)
+
+        self.setLayout(self.contentBox)
+
+
+        print self.gameObj.player
+
 
     def findFace(self,n): #n = cardnum tuple
         self.cardNumIndex = -1
@@ -298,6 +378,8 @@ class Background(QtWidgets.QWidget):
         self.diamondsImgs = ['2_of_diamonds.png', '3_of_diamonds.png', '4_of_diamondsades.png', '5_of_diamonds.png', '6_of_diamonds.png', '7_of_diamonds.png', '8_of_diamonds.png', '9_of_diamonds.png', '10_of_diamonds.png', "jack_of_diamonds2", "queen_of_diamonds2", "king_of_diamonds2", "ace_of_diamonds2"]
 
         self.cardNumIndex = n[0] - 2
+        print n
+        print self.cardNumIndex
 
         if n[1] == "Spades":
             self.cardFaceFile = self.spadesImgs[self.cardNumIndex]
@@ -310,6 +392,94 @@ class Background(QtWidgets.QWidget):
 
         self.imgString = "CardImgs/" + self.cardFaceFile
         return self.imgString
+        
+
+
+
+    def showFront(self,b):
+        if b == True:   #show front of card
+            #TODO get cardNumIndex from gameObj?
+            self.cardNumIndex = -1
+            if self.cardNumber == "Ace":
+                self.cardNumIndex == 12
+            elif self.cardNumber == "King":
+                self.cardNumIndex == 11
+            elif self.cardNumber == "Queen":
+                self.cardNumIndex == 10
+            elif self.cardNumber == "Jack":
+                self.cardNumIndex == 9
+            else:
+                self.cardNumIndex == int(self.cardNumber)
+
+            if self.cardSuit == "Spades":
+                self.cardLabel.setPixmap(self.spadesImgs[cardNumIndex])
+            elif self.cardSuit == "Hearts":
+                self.cardLabel.setPixmap(self.heartsImgs[cardNumIndex])
+            elif self.cardSuit == "Clubs":
+                self.cardLabel.setPixmap(self.clubsImgs[cardNumIndex])
+            else: #self.cardSuit == "Diamonds":
+                self.cardLabel.setPixmap(self.diamondsImgs[cardNumIndex])                                                
+        else:   #show card back
+            self.cardLabel.setPixmap("cardBack.jpg")
+
+    def showGameplayWidget(self):
+        
+        pass
+        
+        
+        
+
+        
+
+
+    def setGameplayWidget(self):
+        pass
+
+    # class CardWidget(QtWidgets.QWidget):
+    #     # def __init__(self,parent=None): 
+    #         # QtWidgets.QWidget.__init__(self, parent)
+    #     def __init__(self):
+    #         # super(QtWidgets.QWidget).__init__()
+    #         QtWidgets.QWidget.__init__(self, parent)
+
+    #         self.cardSuit = ""
+    #         self.cardNumber = ""
+    #         self.cardBack = QPixmap('CardImgs/back2.jpg')
+    #         self.cardLabel = QtWidgets.QLabel()
+    #         self.cardLabel.setPixmap(self.cardBack)
+    #         self.cardLabel.show()
+
+    #     def setCard(c): #c = a card tuple
+    #         self.cardSuit = c[1] #2nd value in card tuple
+    #         self.cardNumber = c[0] #1st value in card tuple
+
+    #     def showFront(self,b):
+    #         if b == True:   #show front of card
+    #             #TODO get cardNumIndex from gameObj?
+    #             self.cardNumIndex = -1
+    #             if self.cardNumber == "Ace":
+    #                 self.cardNumIndex == 12
+    #             elif self.cardNumber == "King":
+    #                 self.cardNumIndex == 11
+    #             elif self.cardNumber == "Queen":
+    #                 self.cardNumIndex == 10
+    #             elif self.cardNumber == "Jack":
+    #                 self.cardNumIndex == 9
+    #             else:
+    #                 self.cardNumIndex == int(self.cardNumber)
+
+    #             if self.cardSuit == "Spades":
+    #                 self.cardLabel.setPixmap(self.spadesImgs[cardNumIndex])
+    #             elif self.cardSuit == "Hearts":
+    #                 self.cardLabel.setPixmap(self.heartsImgs[cardNumIndex])
+    #             elif self.cardSuit == "Clubs":
+    #                 self.cardLabel.setPixmap(self.clubsImgs[cardNumIndex])
+    #             else: #self.cardSuit == "Diamonds":
+    #                 self.cardLabel.setPixmap(self.diamondsImgs[cardNumIndex])                                                
+    #         else:   #show card back
+    #             self.cardLabel.setPixmap("cardBack.jpg")
+
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
