@@ -218,11 +218,7 @@ class Background(QtWidgets.QWidget):
             self.initGameplayWidget()
 
 
-    def initGameplayWidget(self):
-        self.setGameplayWidget()
-        self.showGameplayWidget()
-        self.contentBox = None
-        
+    def initGameplayWidget(self):  
         #remove beginning menu layout 
         if self.hbox:
             self.hbox.deleteLater()
@@ -314,17 +310,6 @@ class Background(QtWidgets.QWidget):
 
         self.imgString = "CardImgs/" + self.cardFaceFile
         return self.imgString
-
-    def showGameplayWidget(self):
-        
-        pass
-        
-
-
-    def setGameplayWidget(self):
-        pass
-
-
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
